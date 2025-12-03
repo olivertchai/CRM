@@ -1,6 +1,6 @@
 ## CRM
 
-Este projeto tem como objetivo implementar um controle de clientes que seram separados em campanhas personalizadas para envio de mensagens .
+Este projeto tem como objetivo implementar um controle de clientes que será separados em campanhas personalizadas para envio de mensagens.
 
 ### Dependências
 
