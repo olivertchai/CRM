@@ -16,3 +16,8 @@ $ docker compose up -d
 ```
 
 Access [localhost](http://localhost)
+
+<img width="1749" height="942" alt="image" src="https://github.com/user-attachments/assets/bfb74068-62c9-4a02-92c4-bfbbac8f1c48" />
+
+<img width="1749" height="942" alt="image" src="https://github.com/user-attachments/assets/b8ab0418-c312-41fb-b51f-16f93eede2d7" />
+
