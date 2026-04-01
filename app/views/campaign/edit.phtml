@@ -8,9 +8,9 @@
               <button
                 class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 transition-colors"
               >
-            <span class="material-symbols-outlined text-slate-800 dark:text-slate-200 hover:text-primary transition-colors cursor-pointer">
-              arrow_back
-            </span>
+                <span class="material-symbols-outlined">
+                  arrow_back
+                </span>
               </button>
 
               <div class="flex flex-col">
@@ -32,14 +32,17 @@
           >
             <div class="mb-8">
               <h2 class="text-xl font-bold mb-2">
-                Informações da Campanha
+                <?= $titleEdit ?>
               </h2>
               <p class="text-slate-500 dark:text-slate-400">
-                Preencha os dados abaixo para configurar sua nova campanha de marketing.
+                Preencha os dados abaixo para editar sua campanha de marketing.
               </p>
             </div>
 
-            <form action="create.php" method="POST" class="flex flex-col gap-6">
+            <form action="update.php" method="POST" class="flex flex-col gap-6">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="campaign[id]" value="<?= $campaign['id'] ?>">
+
               <!-- Row 1 -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <label class="flex flex-col gap-2">
@@ -52,6 +55,8 @@
                     placeholder="Ex: Campanha de Verão 2024"
                     type="text"
                     name="campaign[title]"
+                    value="<?= $campaign['title'] ?>"
+                    required
                   />
                   <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($errors) ? 'hidden' : '' ?>">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
