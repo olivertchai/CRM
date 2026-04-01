@@ -11,6 +11,7 @@ if ($method != 'PUT') {
 define('DB_PATH', '/var/www/database/campaigns.txt');
 
 $campaign = $_POST['campaign'];
+
 $id = $campaign['id'];
 $title = trim($campaign['title']);
 
