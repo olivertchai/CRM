@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -9,7 +8,7 @@ if ($method != 'POST') {
     exit();
 }
 
-define('DB_PATH', __DIR__ . '/../../../database/campaigns.txt');
+define('DB_PATH', '/var/www/database/campaigns.txt');
 
 $campaign = $_POST['campaign'];
 $title = trim($campaign['title']);
@@ -28,9 +27,10 @@ if (empty($errors)) {
     header('Location: /pages/campaign');
 
 } else{
-    // Armazena erros na sessão e redireciona para evitar reenvio de POST
-    $_SESSION['errors'] = $errors;
-    $_SESSION['title_value'] = $title;
-    header('Location: /pages/campaign/new.php');
-    exit();
+    // Recarrega o formulário com os erros
+
+    $title = 'Criar Nova Campanha';
+    $view = '/var/www/app/views/campaign/new.phtml';
+
+    require '/var/www/app/views/layouts/application.phtml';
 }
