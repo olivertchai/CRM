@@ -39,7 +39,7 @@
               </p>
             </div>
 
-            <form action="create.php" method="POST" class="flex flex-col gap-6 <?= empty($errors)?>">
+            <form action="create.php" method="POST" class="flex flex-col gap-6">
               <!-- Row 1 -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <label class="flex flex-col gap-2">
@@ -57,8 +57,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
                       <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
                     </svg>
-                    <!-- Para mostrar o erro direto do arquivo create.php -->
-                    <?php if (!empty($errors)) echo htmlspecialchars($errors[0]); ?>
+                    <?= $errors[0]?>
                   </span>
                 </label>
 
