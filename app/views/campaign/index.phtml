@@ -47,7 +47,7 @@
 <!-- Campaign Cards Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-purpose="campaign-list">
   
-  <?php foreach ($campaigns as $index => $campaign): ?>
+  <?php foreach ($campaigns as $campaign): ?>
     
     <div class="block bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
       
@@ -56,17 +56,17 @@
           Ativa
         </span>
         
-        <a href="/pages/campaign/edit.php?id=<?= $index ?>" class="text-slate-400 hover:text-slate-600 transition-colors">
+        <a href="/pages/campaign/edit.php?id=<?= $campaign->getId() ?>" class="text-slate-400 hover:text-slate-600 transition-colors">
           <span class="material-symbols-outlined text-xl">more_vert</span>
         </a>
       </div>
 
-      <a href="/pages/campaign/show.php?id=<?= $index ?>" class="group">
+      <a href="/pages/campaign/show.php?id=<?= $campaign->getId() ?>" class="group">
         <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
-          <?= $campaign ?> 
+          <?= $campaign->getTitle() ?> 
         </h3>
         <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 line-clamp-2">
-          Promoção de pacotes turísticos para o litoral nordestino com foco em famílias.
+          <?= $campaign->getDescription() ?>
         </p>
       </a>
       

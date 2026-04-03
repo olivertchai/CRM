@@ -1,15 +1,12 @@
 <?php
 
+require '/var/www/app/models/Campaign.php';
+
 $id = (int)$_GET['id'];
 
-define('DB_PATH', '/var/www/database/campaigns.txt');
+$campaign = Campaign::findById($id);
 
-$campaigns = file(DB_PATH, FILE_IGNORE_NEW_LINES);
-
-$campaign['title'] = $campaigns[$id];
-$campaign['id'] = $id;
-
-$title = file_get_contents(DB_PATH);
+//$title = file_get_contents(DB_PATH);
 
 $view = '/var/www/app/views/campaign/show.phtml';
 

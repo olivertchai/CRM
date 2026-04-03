@@ -74,4 +74,23 @@ class Campaign
         return $this->errors[$index] ?? [];
     }
 
+    public static function all(): array{
+        $campaigns = file(self::DB_PATH, FILE_IGNORE_NEW_LINES);
+
+        return array_map(function($line,$title) {
+            // Aqui você pode implementar a lógica para criar objetos Campaign a partir das linhas do arquivo
+            return new Campaign($line, $title, null, new DateTime(), new DateTime());
+        },array_keys($campaigns) , $campaigns);
+    }
+
+    public static function findById($id): ?Campaign{
+        $campaigns = self::all();
+        
+        foreach ($campaigns as $campaign) {
+            if ($campaign->getId() === $id) {
+                return $campaign;
+            }
+        }
+        return null; // Retorna null se a campanha não for encontrada
+    }
 }
