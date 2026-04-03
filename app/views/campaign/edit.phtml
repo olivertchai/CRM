@@ -18,7 +18,7 @@
 
         <div class="flex flex-col">
           <h1 class="text-3xl font-bold tracking-tight">
-            <?= $title ?>
+            <?= $campaign->getTitle() ?>
           </h1>
           <p class="text-slate-500 dark:text-slate-400 text-sm">
             Crie e configure uma nova campanha de marketing
@@ -42,7 +42,7 @@
 
       <form action="update.php" method="POST" class="flex flex-col gap-6">
           <input type="hidden" name="_method" value="PUT">
-          <input type="hidden" name="campaign[id]" value="<?= $campaign['id'] ?>">
+          <input type="hidden" name="campaign[id]" value="<?= $campaign->getId() ?>">
 
         <!-- Row 1 -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -56,14 +56,16 @@
               placeholder="Ex: Campanha de Verão 2024"
               type="text"
               name="campaign[title]"
-              value="<?= $campaign['title'] ?>"
+              value="<?= $campaign->getTitle() ?>"
               required
             />
-            <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($errors) ? 'hidden' : '' ?>">
+
+            <!-- Error Message -->
+            <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= $campaign->hasErrors() ? 'hidden' : '' ?>">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
               </svg>
-              <?= $errors[0]?>
+              <?= $campaign->getErrorsIndex('title')? $campaign->getErrorsIndex('title'): '' ?>
             </span>
           </label>
 

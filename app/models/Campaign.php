@@ -48,16 +48,31 @@ class Campaign
         return $this->startDate->format($format) . ' até ' . $this->endDate->format($format);
     }
 
-    public function save():bool{
-        if($this->isValid()) {
-            $this->id = uniqid(); // Gerar um ID único para a campanha
-            // Aqui você pode implementar a lógica para salvar a campanha em um banco de dados real
-            file_put_contents(self::DB_PATH, $this->title. PHP_EOL, FILE_APPEND);
-            return true;
-        } else {
+    public function save(): bool {
+        if (!$this->isValid()) {
             return false;
         }
+
+        $campaigns = file(self::DB_PATH, FILE_IGNORE_NEW_LINES) ?: [];
+
+        if ($this->id === null || $this->id === '' || !array_key_exists($this->id, $campaigns)) {
+            // Cria nova campanha
+            $campaigns[] = $this->title;
+            $this->id = count($campaigns) - 1;
+        } else {
+            // Atualiza campanha existente
+            $campaigns[$this->id] = $this->title;
+        }
+
+        file_put_contents(self::DB_PATH, implode(PHP_EOL, $campaigns) . PHP_EOL);
+
+        return true;
     }
+
+    public function newRecord(): bool {
+        return $this->id === null || $this->id === '';
+    }
+
     public function isValid():bool{
         $this->errors = []; // Limpa erros anteriores
 
@@ -75,22 +90,23 @@ class Campaign
     }
 
     public static function all(): array{
-        $campaigns = file(self::DB_PATH, FILE_IGNORE_NEW_LINES);
+        $campaigns = file(self::DB_PATH, FILE_IGNORE_NEW_LINES) ?: [];
 
-        return array_map(function($line,$title) {
+        return array_map(function($id,$title) {
             // Aqui você pode implementar a lógica para criar objetos Campaign a partir das linhas do arquivo
-            return new Campaign($line, $title, null, new DateTime(), new DateTime());
-        },array_keys($campaigns) , $campaigns);
+            return new Campaign((int)$id, $title, null, new DateTime(), new DateTime());
+        }, array_keys($campaigns), $campaigns);
     }
 
     public static function findById($id): ?Campaign{
         $campaigns = self::all();
-        
+
         foreach ($campaigns as $campaign) {
-            if ($campaign->getId() === $id) {
+            if ($campaign->getId() === (int)$id) {
                 return $campaign;
             }
         }
+
         return null; // Retorna null se a campanha não for encontrada
     }
 }

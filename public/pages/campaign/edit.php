@@ -1,16 +1,17 @@
 <?php
 
+require '/var/www/app/models/Campaign.php';
+
 $id = (int)$_GET['id'];
 
-define('DB_PATH', '/var/www/database/campaigns.txt');
+$campaign = Campaign::findById($id);
 
-$campaigns = file(DB_PATH, FILE_IGNORE_NEW_LINES);
-
-$campaign ['id'] = $id;
-$campaign['title'] = $campaigns[$id];
+if (!$campaign) {
+    header('Location: /pages/campaign/index.php');
+    exit;
+}
 
 $titleEdit = 'Editar Campanha';
-$title = $campaign['title'];
 
 $view = '/var/www/app/views/campaign/edit.phtml';
 
