@@ -48,6 +48,14 @@ class Campaign
         return $this->startDate->format($format) . ' até ' . $this->endDate->format($format);
     }
 
+
+    public function destroy(){
+        $campaigns = file(self::DB_PATH, FILE_IGNORE_NEW_LINES) ?: [];
+        unset($campaigns[$this->id]);
+        $data = implode(PHP_EOL, $campaigns);
+        file_put_contents(self::DB_PATH, $data . PHP_EOL);
+    }
+
     public function save(): bool {
         if (!$this->isValid()) {
             return false;
