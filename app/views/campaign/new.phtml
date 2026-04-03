@@ -52,14 +52,15 @@
               placeholder="Ex: Campanha de Verão 2024"
               type="text"
               name="campaign[title]"
+              required
             />
 
             <!-- Error Message -->
-            <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($errors) ? 'hidden' : '' ?>">
+            <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= $campaign->hasErrors() ? 'hidden' : '' ?>">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
               </svg>
-              <?= $errors[0]?>
+              <?= $campaign->getErrorsIndex('title')? $campaign->getErrorsIndex('title') : '' ?>
             </span>
 
           </label>
@@ -89,6 +90,7 @@
             placeholder="Descreva os objetivos e detalhes da campanha..."
             rows="4"
             name="campaign[description]"
+            required
           ></textarea>
         </label>
 
@@ -103,6 +105,7 @@
               class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm"
               type="datetime-local"
               name="campaign[start_date]"
+              required
             />
           </label>
 
@@ -115,6 +118,7 @@
               class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm"
               type="datetime-local"
               name="campaign[end_date]"
+              required
             />
           </label>
         </div>

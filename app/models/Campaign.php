@@ -36,7 +36,7 @@ class Campaign
     public function setImagePath($imagePath){$this->imagePath = $imagePath;}
 
     // Validação básica: data final não pode ser antes da inicial
-    public function validate()
+    public function validateDateInitialEnd()
     {
         if ($this->endDate < $this->startDate) {
             throw new InvalidArgumentException("A data final não pode ser antes da data inicial.");
@@ -44,12 +44,34 @@ class Campaign
     }
 
     // Método para formatar a saída (ex: d/m/Y)
-    public function getIntervaloFormatado(string $format = 'd/m/Y'): string {
+    public function getIntervalFormated(string $format = 'd/m/Y'): string {
         return $this->startDate->format($format) . ' até ' . $this->endDate->format($format);
     }
 
-    public function save(){
-        file_put_contents(self::DB_PATH, $this->title. PHP_EOL, FILE_APPEND);
-        return true;
+    public function save():bool{
+        if($this->isValid()) {
+            $this->id = uniqid(); // Gerar um ID único para a campanha
+            // Aqui você pode implementar a lógica para salvar a campanha em um banco de dados real
+            file_put_contents(self::DB_PATH, $this->title. PHP_EOL, FILE_APPEND);
+            return true;
+        } else {
+            return false;
+        }
     }
+    public function isValid():bool{
+        $this->errors = []; // Limpa erros anteriores
+
+        if(empty($this->title)) {
+            $this->errors[] = 'O título da campanha é obrigatório.';
+        }return empty($this->errors);
+    }
+
+    public function hasErrors(): bool{
+        return empty($this->errors);
+    }
+
+    public function getErrorsIndex($index): array{
+        return $this->errors[$index] ?? [];
+    }
+
 }
