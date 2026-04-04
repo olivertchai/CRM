@@ -9,7 +9,11 @@ class CampaignsController
         $campaigns = Campaign::all();
 
         $title = 'Campanhas';
-        $this->render('index', compact('campaigns', 'title'));
+        if ($this->isJsonRequest()) {
+            $this->renderJson('index', compact('campaigns'));
+        } else {
+            $this->render('index', compact('campaigns', 'title'));
+        }
     }
 
     public function show()
@@ -117,10 +121,27 @@ class CampaignsController
         $view = '/var/www/app/views/campaign/' . $view . '.phtml';
         require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
     }
-
     private function redirectTo($path)
     {
         header('Location: ' . $path);
         exit();
+    }
+
+    private function renderJson($view, $data = [])
+    {
+        extract($data);
+
+        $view = '/var/www/app/views/campaign/' . $view . '.phtml';
+        $json = [];
+
+        header('Content-Type: application/json, charset=utf-8');
+        require $view;
+        echo json_encode($json);
+        return;
+    }
+
+    private function isJsonRequest()
+    {
+        return isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false;
     }
 }
