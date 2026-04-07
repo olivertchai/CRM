@@ -1,5 +1,8 @@
 <?php
+namespace App\Models;
 
+use DateTime;
+use InvalidArgumentException;
 class Campaign
 {
     private const DB_PATH = '/var/www/database/campaigns.txt';
