@@ -1,6 +1,8 @@
 <?php
-require '/var/www/app/models/Campaign.php';
+namespace App\Controllers;
+use App\Models\Campaign;
 
+use DateTime;
 class CampaignsController
 {
     private $layout = 'application';
