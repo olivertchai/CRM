@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Models;
 
-use PHPUnit\Framework\TestCase;
 use App\Models\Campaign;
+use Tests\TestCase;
 
 class CampaignTest extends TestCase
 {

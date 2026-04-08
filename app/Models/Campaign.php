@@ -5,7 +5,6 @@ use DateTime;
 use InvalidArgumentException;
 class Campaign
 {
-    private const DB_PATH = '/var/www/database/campaigns.txt';
     private array $errors = [];
 
     private $id;
@@ -15,7 +14,7 @@ class Campaign
     private ?DateTime $endDate;
     private ?string $imagePath; // Novo atributo para o caminho da imagem
 
-    public function __construct($id = null, string $title, ?string $description = null, ?DateTime $startDate = null, ?DateTime $endDate = null, ?string $imagePath = null)
+    public function __construct($id, string $title, ?string $description = null, ?DateTime $startDate = null, ?DateTime $endDate = null, ?string $imagePath = null)
     {
         $this->id = $id;
         $this->title = $title;
@@ -48,36 +47,36 @@ class Campaign
 
     // Método para formatar a saída (ex: d/m/Y)
     public function getIntervalFormated(string $format = 'd/m/Y'): string {
+        if (!$this->startDate || !$this->endDate) {
+            return 'Período não definido';
+        }
+            
         return $this->startDate->format($format) . ' até ' . $this->endDate->format($format);
     }
 
 
     public function destroy(){
-        $campaigns = file(self::DB_PATH, FILE_IGNORE_NEW_LINES) ?: [];
-        unset($campaigns[$this->id]);
+        $campaigns = file_exists(self::DB_PATH()) ? file(self::DB_PATH(), FILE_IGNORE_NEW_LINES) : [];        unset($campaigns[$this->id]);
         $data = implode(PHP_EOL, $campaigns);
-        file_put_contents(self::DB_PATH, $data . PHP_EOL);
+        file_put_contents(self::DB_PATH(), $data . PHP_EOL);
     }
 
-    public function save(): bool {
-        if (!$this->isValid()) {
-            return false;
+    public function save(): bool
+    {
+        if ($this->isValid()) {
+            if ($this->newRecord()) {
+                $this->id = file_exists(self::DB_PATH()) ? count(file(self::DB_PATH())) : 0;
+                file_put_contents(self::DB_PATH(), $this->title . PHP_EOL, FILE_APPEND);
+            } else {
+                $campaigns = file_exists(self::DB_PATH()) ? file(self::DB_PATH(), FILE_IGNORE_NEW_LINES) : [];
+                $campaigns[$this->id] = $this->title;
+
+                $data = implode(PHP_EOL, $campaigns);
+                file_put_contents(self::DB_PATH(), $data . PHP_EOL);
+            }
+            return true;
         }
-
-        $campaigns = file(self::DB_PATH, FILE_IGNORE_NEW_LINES) ?: [];
-
-        if ($this->id === null || $this->id === '' || !array_key_exists($this->id, $campaigns)) {
-            // Cria nova campanha
-            $campaigns[] = $this->title;
-            $this->id = count($campaigns) - 1;
-        } else {
-            // Atualiza campanha existente
-            $campaigns[$this->id] = $this->title;
-        }
-
-        file_put_contents(self::DB_PATH, implode(PHP_EOL, $campaigns) . PHP_EOL);
-
-        return true;
+        return false;
     }
 
     public function newRecord(): bool {
@@ -93,7 +92,7 @@ class Campaign
     }
 
     public function hasErrors(): bool{
-        return empty($this->errors);
+        return !empty($this->errors);
     }
 
     public function getErrorsIndex($index): array{
@@ -101,8 +100,7 @@ class Campaign
     }
 
     public static function all(): array{
-        $campaigns = file(self::DB_PATH, FILE_IGNORE_NEW_LINES) ?: [];
-
+        $campaigns = file_exists(self::DB_PATH()) ? file(self::DB_PATH(), FILE_IGNORE_NEW_LINES) : [];
         return array_map(function($id,$title) {
             // Aqui você pode implementar a lógica para criar objetos Campaign a partir das linhas do arquivo
             return new Campaign((int)$id, $title, null, new DateTime(), new DateTime());
@@ -120,4 +118,11 @@ class Campaign
 
         return null; // Retorna null se a campanha não for encontrada
     }
+
+    private static function DB_PATH()
+    {
+        $dbName = $_ENV['DB_NAME'] ?? 'campaigns.txt';
+        return DATABASE_PATH . $dbName;
+    }
+
 }

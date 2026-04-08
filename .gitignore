@@ -13,3 +13,6 @@ html
 
 # Ignore PHPUnit cache
 .cache/*
+
+# igonore .env file
+.env
