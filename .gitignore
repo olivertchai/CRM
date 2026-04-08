@@ -7,4 +7,9 @@ html
 # Ignore logs and temporary files
 *.log
 *.tmp
+
+# Ignore vendor directory
 /vendor/
+
+# Ignore PHPUnit cache
+.cache/*
