@@ -9,13 +9,13 @@ class Campaign
     private array $errors = [];
 
     private $id;
-    private $title;
-    private $description;
-    private DateTime $startDate;
-    private DateTime $endDate;
-    private $imagePath; // Novo atributo para o caminho da imagem
+    private string $title;
+    private ?string $description;
+    private ?DateTime $startDate;
+    private ?DateTime $endDate;
+    private ?string $imagePath; // Novo atributo para o caminho da imagem
 
-    public function __construct($id, $title, $description, DateTime $startDate, DateTime $endDate, $imagePath = null)
+    public function __construct($id = null, string $title, ?string $description = null, ?DateTime $startDate = null, ?DateTime $endDate = null, ?string $imagePath = null)
     {
         $this->id = $id;
         $this->title = $title;

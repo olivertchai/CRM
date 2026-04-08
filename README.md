@@ -9,10 +9,36 @@ Este projeto tem como objetivo implementar um controle de clientes que será sep
 
 ### To run
 
+
+#### Clone Repository
 ```
 $ git clone https://github.com/olivertchai/CRM
 $ cd crm
+```
+#### Define the env variables
+```
+$ cp .env.example .env
+```
+
+#### Define the file database
+```
+$ touch ./database/campaign.txt
+$ chmod 665 ./database/campaign.txt
+```
+
+#### Install the dependencies
+```
+$ docker compose run --rm composer install
+```
+
+#### Up the containers
+```
 $ docker compose up -d
+```
+
+#### Run the tests
+```
+$ docker compose run --rm php ./vendor/bin/phpunit tests/Unit/Models/CampaignTest.php --color
 ```
 
 Access [localhost](http://localhost)
