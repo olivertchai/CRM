@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Models;
 
 use DateTime;
 use InvalidArgumentException;
+
 class Campaign
 {
     private array $errors = [];
@@ -24,18 +26,51 @@ class Campaign
         $this->imagePath = $imagePath;
     }
 
-    public function getId(){return $this->id;}
-    public function getTitle(){return $this->title;}
-    public function getDescription(){return $this->description;}
-    public function getStartDate(){return $this->startDate;}
-    public function getEndDate(){return $this->endDate;}
-    public function getImagePath(){return $this->imagePath;}
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+    public function getImagePath()
+    {
+        return $this->imagePath;
+    }
 
-    public function setTitle($title){$this->title = $title;}
-    public function setDescription($description){$this->description = $description;}
-    public function setStartDate(DateTime $startDate){$this->startDate = $startDate;}
-    public function setEndDate(DateTime $endDate){$this->endDate = $endDate;}
-    public function setImagePath($imagePath){$this->imagePath = $imagePath;}
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+    public function setStartDate(DateTime $startDate)
+    {
+        $this->startDate = $startDate;
+    }
+    public function setEndDate(DateTime $endDate)
+    {
+        $this->endDate = $endDate;
+    }
+    public function setImagePath($imagePath)
+    {
+        $this->imagePath = $imagePath;
+    }
 
     // Validação básica: data final não pode ser antes da inicial
     public function validateDateInitialEnd()
@@ -46,17 +81,20 @@ class Campaign
     }
 
     // Método para formatar a saída (ex: d/m/Y)
-    public function getIntervalFormated(string $format = 'd/m/Y'): string {
+    public function getIntervalFormated(string $format = 'd/m/Y'): string
+    {
         if (!$this->startDate || !$this->endDate) {
             return 'Período não definido';
         }
-            
+
         return $this->startDate->format($format) . ' até ' . $this->endDate->format($format);
     }
 
 
-    public function destroy(){
-        $campaigns = file_exists(self::DB_PATH()) ? file(self::DB_PATH(), FILE_IGNORE_NEW_LINES) : [];        unset($campaigns[$this->id]);
+    public function destroy()
+    {
+        $campaigns = file_exists(self::DB_PATH()) ? file(self::DB_PATH(), FILE_IGNORE_NEW_LINES) : [];
+        unset($campaigns[$this->id]);
         $data = implode(PHP_EOL, $campaigns);
         file_put_contents(self::DB_PATH(), $data . PHP_EOL);
     }
@@ -79,35 +117,41 @@ class Campaign
         return false;
     }
 
-    public function newRecord(): bool {
+    public function newRecord(): bool
+    {
         return $this->id === null || $this->id === '';
     }
 
-    public function isValid():bool{
+    public function isValid(): bool
+    {
         $this->errors = []; // Limpa erros anteriores
 
-        if(empty($this->title)) {
+        if (empty($this->title)) {
             $this->errors[] = 'O título da campanha é obrigatório.';
         }return empty($this->errors);
     }
 
-    public function hasErrors(): bool{
+    public function hasErrors(): bool
+    {
         return !empty($this->errors);
     }
 
-    public function getErrorsIndex($index): array{
+    public function getErrorsIndex($index): array
+    {
         return $this->errors[$index] ?? [];
     }
 
-    public static function all(): array{
+    public static function all(): array
+    {
         $campaigns = file_exists(self::DB_PATH()) ? file(self::DB_PATH(), FILE_IGNORE_NEW_LINES) : [];
-        return array_map(function($id,$title) {
+        return array_map(function ($id, $title) {
             // Aqui você pode implementar a lógica para criar objetos Campaign a partir das linhas do arquivo
             return new Campaign((int)$id, $title, null, new DateTime(), new DateTime());
         }, array_keys($campaigns), $campaigns);
     }
 
-    public static function findById($id): ?Campaign{
+    public static function findById($id): ?Campaign
+    {
         $campaigns = self::all();
 
         foreach ($campaigns as $campaign) {
@@ -124,5 +168,4 @@ class Campaign
         $dbName = $_ENV['DB_NAME'] ?? 'campaigns.txt';
         return DATABASE_PATH . $dbName;
     }
-
 }

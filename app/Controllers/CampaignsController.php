@@ -1,8 +1,10 @@
 <?php
-namespace App\Controllers;
-use App\Models\Campaign;
 
+namespace App\Controllers;
+
+use App\Models\Campaign;
 use DateTime;
+
 class CampaignsController
 {
     private $layout = 'application';
@@ -21,7 +23,6 @@ class CampaignsController
     public function show()
     {
         $id = (int)$_GET['id'];
-
         $campaign = Campaign::findById($id);
 
         if (!$campaign) {
@@ -29,7 +30,10 @@ class CampaignsController
             exit;
         }
 
-        $this->render('show', compact('campaign'));
+        // Adicione o título aqui
+        $title = 'Detalhes da Campanha';
+        // Inclua o 'title' no compact
+        $this->render('show', compact('campaign', 'title'));
     }
 
     public function new()
@@ -42,7 +46,9 @@ class CampaignsController
     public function create()
     {
         $method = $_SERVER['REQUEST_METHOD'];
-        if ($method != 'POST') $this->redirectTo('/pages/campaign');
+        if ($method != 'POST') {
+            $this->redirectTo('/pages/campaign');
+        }
 
         $params = $_POST['campaign'];
         $campaign = new Campaign(
@@ -53,13 +59,12 @@ class CampaignsController
             endDate : new DateTime($params['end_date'])
         );
 
-        if($campaign->save()) {
+        if ($campaign->save()) {
             $this->redirectTo('/pages/campaign');
         } else {
             // Recarrega o formulário com os erros
             $title = 'Criar Nova Campanha';
             $this->render('create', compact('campaign', 'title'));
-
         }
     }
 
@@ -69,7 +74,9 @@ class CampaignsController
 
         $campaign = Campaign::findById($id);
 
-        if (!$campaign) $this->redirectTo('/pages/campaign');
+        if (!$campaign) {
+            $this->redirectTo('/pages/campaign');
+        }
 
         $title = 'Editar Campanha';
         $this->render('edit', compact('campaign', 'title'));
@@ -80,17 +87,19 @@ class CampaignsController
         $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
         // Redireciona para a página de listagem se o método não for POST
-        if ($method != 'PUT') $this->redirectTo('/pages/campaign');
+        if ($method != 'PUT') {
+            $this->redirectTo('/pages/campaign');
+        }
 
         $params = $_POST['campaign'];
 
         $campaign = Campaign::findById($params['id']);
         $campaign->setTitle(trim($params['title']));
 
-        if($campaign->save()) {
+        if ($campaign->save()) {
             $this->redirectTo('/pages/campaign');
-        } else{
-            // Recarrega o formulário 
+        } else {
+            // Recarrega o formulário
 
             $title = $campaign['title'];
             $this->render('update', compact('campaign', 'title'));
@@ -102,7 +111,9 @@ class CampaignsController
         $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
         // Redireciona para a página de listagem se o método não for DELETE
-        if ($method != 'DELETE') $this->redirectTo('/pages/campaign');
+        if ($method != 'DELETE') {
+            $this->redirectTo('/pages/campaign');
+        }
 
         $params = $_POST['campaign'];
         $campaign = Campaign::findById($params['id']);
@@ -115,7 +126,7 @@ class CampaignsController
 
         require '/var/www/app/models/Campaign.php';
     }
-    
+
     private function render($view, $data = [])
     {
         extract($data);

@@ -27,5 +27,4 @@ class TestCase extends FrameworkTestCase
             unlink($file); // Remove o arquivo de banco de dados
         }
     }
-}    
-
+}
