@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DateTime;
 use InvalidArgumentException;
+use Core\Constants\Constants;
 
 class Campaign
 {
@@ -165,7 +166,9 @@ class Campaign
 
     private static function DB_PATH()
     {
-        $dbName = $_ENV['DB_NAME'] ?? 'campaigns.txt';
-        return DATABASE_PATH . $dbName;
+//        $dbName = $_ENV['DB_NAME'] ?? 'campaigns.txt';
+//        return Constants::databasePath() . $dbName;
+
+        return Constants::databasePath()->join($_ENV['DB_NAME']);
     }
 }
