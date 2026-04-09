@@ -94,24 +94,24 @@ class Campaign
 
     public function destroy()
     {
-        $campaigns = file_exists(self::DB_PATH()) ? file(self::DB_PATH(), FILE_IGNORE_NEW_LINES) : [];
+        $campaigns = file_exists(self::dbPath()) ? file(self::dbPath(), FILE_IGNORE_NEW_LINES) : [];
         unset($campaigns[$this->id]);
         $data = implode(PHP_EOL, $campaigns);
-        file_put_contents(self::DB_PATH(), $data . PHP_EOL);
+        file_put_contents(self::dbPath(), $data . PHP_EOL);
     }
 
     public function save(): bool
     {
         if ($this->isValid()) {
             if ($this->newRecord()) {
-                $this->id = file_exists(self::DB_PATH()) ? count(file(self::DB_PATH())) : 0;
-                file_put_contents(self::DB_PATH(), $this->title . PHP_EOL, FILE_APPEND);
+                $this->id = file_exists(self::dbPath()) ? count(file(self::dbPath())) : 0;
+                file_put_contents(self::dbPath(), $this->title . PHP_EOL, FILE_APPEND);
             } else {
-                $campaigns = file_exists(self::DB_PATH()) ? file(self::DB_PATH(), FILE_IGNORE_NEW_LINES) : [];
+                $campaigns = file_exists(self::dbPath()) ? file(self::dbPath(), FILE_IGNORE_NEW_LINES) : [];
                 $campaigns[$this->id] = $this->title;
 
                 $data = implode(PHP_EOL, $campaigns);
-                file_put_contents(self::DB_PATH(), $data . PHP_EOL);
+                file_put_contents(self::dbPath(), $data . PHP_EOL);
             }
             return true;
         }
@@ -144,7 +144,7 @@ class Campaign
 
     public static function all(): array
     {
-        $campaigns = file_exists(self::DB_PATH()) ? file(self::DB_PATH(), FILE_IGNORE_NEW_LINES) : [];
+        $campaigns = file_exists(self::dbPath()) ? file(self::dbPath(), FILE_IGNORE_NEW_LINES) : [];
         return array_map(function ($id, $title) {
             // Aqui você pode implementar a lógica para criar objetos Campaign a partir das linhas do arquivo
             return new Campaign((int)$id, $title, null, new DateTime(), new DateTime());
@@ -164,7 +164,7 @@ class Campaign
         return null; // Retorna null se a campanha não for encontrada
     }
 
-    private static function DB_PATH()
+    private static function dbPath()
     {
 //        $dbName = $_ENV['DB_NAME'] ?? 'campaigns.txt';
 //        return Constants::databasePath() . $dbName;
