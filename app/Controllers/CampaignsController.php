@@ -8,6 +8,7 @@ use DateTime;
 class CampaignsController
 {
     private  $layout = 'application';
+
     public function index(): void
     {
         $campaigns = Campaign::all();
