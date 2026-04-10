@@ -7,6 +7,13 @@ use Tests\TestCase;
 abstract class ControllerTestCase extends TestCase
 {
     // Mudamos para 'void' pois o PHPUnit vai validar a saída internamente
+    /**
+     * Summary of get
+     * @param string $action
+     * @param string $controllerClass
+     * @param array $regexPatterns<string>
+     * @return void
+     */
     public function get(string $action, string $controllerClass, array $regexPatterns = []): void
     {
         $controller = new $controllerClass();

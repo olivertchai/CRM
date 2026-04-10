@@ -18,7 +18,7 @@ class TestCase extends FrameworkTestCase
         $this->clearDatabase();
     }
 
-    private function clearDatabase()
+    private function clearDatabase(): void
     {
         $file = Constants::databasePath()->join($_ENV['DB_NAME']);
         if (file_exists($file)) {
