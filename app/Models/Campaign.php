@@ -56,23 +56,23 @@ class Campaign
         return $this->imagePath;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
-    public function setDescription(?string $description)
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
-    public function setStartDate(?DateTime $startDate)
+    public function setStartDate(?DateTime $startDate): void
     {
         $this->startDate = $startDate;
     }
-    public function setEndDate(?DateTime $endDate)
+    public function setEndDate(?DateTime $endDate): void
     {
         $this->endDate = $endDate;
     }
-    public function setImagePath(?string $imagePath)
+    public function setImagePath(?string $imagePath): void
     {
         $this->imagePath = $imagePath;
     }

@@ -8,7 +8,7 @@ use Tests\Unit\Controllers\ControllerTestCase;
 
 class CampaignsControllerTest extends ControllerTestCase
 {
-    public function test_list_all_campaigns()
+    public function test_list_all_campaigns(): void
     {
         $campaigns[] = new Campaign(1, 'Campaign 1');
         $campaigns[] = new Campaign(2, 'Campaign 2');

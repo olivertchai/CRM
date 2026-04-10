@@ -7,8 +7,8 @@ use DateTime;
 
 class CampaignsController
 {
-    private $layout = 'application';
-    public function index()
+    private  $layout = 'application';
+    public function index(): void
     {
         $campaigns = Campaign::all();
 
@@ -20,7 +20,7 @@ class CampaignsController
         }
     }
 
-    public function show():void
+    public function show(): void
     {
         $id = (int)$_GET['id'];
         $campaign = Campaign::findById($id);
@@ -36,14 +36,14 @@ class CampaignsController
         $this->render('show', compact('campaign', 'title'));
     }
 
-    public function new():void
+    public function new(): void
     {
         $campaign = new Campaign(id: null, title: '', description: '', startDate: new DateTime(), endDate: new DateTime());
         $title = 'Criar Nova Campanha';
         $this->render('new', compact('campaign', 'title'));
     }
 
-    public function create():void
+    public function create(): void
     {
         $method = $_SERVER['REQUEST_METHOD'];
         if ($method != 'POST') {
@@ -68,7 +68,7 @@ class CampaignsController
         }
     }
 
-    public function edit():void
+    public function edit(): void
     {
         $id = (int)$_GET['id'];
 
@@ -82,7 +82,7 @@ class CampaignsController
         $this->render('edit', compact('campaign', 'title'));
     }
 
-    public function update():void
+    public function update(): void
     {
         $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
@@ -106,7 +106,7 @@ class CampaignsController
         }
     }
 
-    public function delete():void
+    public function delete(): void
     {
         $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
@@ -130,17 +130,17 @@ class CampaignsController
     /**
      * Summary of render
      * @param string $view
-     * @param array $data
+     * @param array $data<string, mixed>
      * @return void
      */
-    private function render(string $view, array $data = []):void
+    private function render(string $view, array $data = []): void
     {
         extract($data);
 
         $view = '/var/www/app/views/campaign/' . $view . '.phtml';
         require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
     }
-    private function redirectTo(string $path):void
+    private function redirectTo(string $path): void
     {
         header('Location: ' . $path);
         exit();
@@ -152,7 +152,7 @@ class CampaignsController
      * @param array<string, mixed> $data
      * @return void
      */
-    private function renderJson(string $view, array $data = []):void
+    private function renderJson(string $view, array $data = []): void
     {
         extract($data);
 
