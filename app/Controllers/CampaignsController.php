@@ -20,7 +20,7 @@ class CampaignsController
         }
     }
 
-    public function show()
+    public function show():void
     {
         $id = (int)$_GET['id'];
         $campaign = Campaign::findById($id);
@@ -36,14 +36,14 @@ class CampaignsController
         $this->render('show', compact('campaign', 'title'));
     }
 
-    public function new()
+    public function new():void
     {
         $campaign = new Campaign(id: null, title: '', description: '', startDate: new DateTime(), endDate: new DateTime());
         $title = 'Criar Nova Campanha';
         $this->render('new', compact('campaign', 'title'));
     }
 
-    public function create()
+    public function create():void
     {
         $method = $_SERVER['REQUEST_METHOD'];
         if ($method != 'POST') {
@@ -68,7 +68,7 @@ class CampaignsController
         }
     }
 
-    public function edit()
+    public function edit():void
     {
         $id = (int)$_GET['id'];
 
@@ -82,7 +82,7 @@ class CampaignsController
         $this->render('edit', compact('campaign', 'title'));
     }
 
-    public function update()
+    public function update():void
     {
         $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
@@ -106,7 +106,7 @@ class CampaignsController
         }
     }
 
-    public function delete()
+    public function delete():void
     {
         $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
@@ -127,20 +127,32 @@ class CampaignsController
         require '/var/www/app/models/Campaign.php';
     }
 
-    private function render($view, $data = [])
+    /**
+     * Summary of render
+     * @param string $view
+     * @param array $data
+     * @return void
+     */
+    private function render(string $view, array $data = []):void
     {
         extract($data);
 
         $view = '/var/www/app/views/campaign/' . $view . '.phtml';
         require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
     }
-    private function redirectTo($path)
+    private function redirectTo(string $path):void
     {
         header('Location: ' . $path);
         exit();
     }
 
-    private function renderJson($view, $data = [])
+    /**
+     * Summary of renderJson
+     * @param string $view
+     * @param array<string, mixed> $data
+     * @return void
+     */
+    private function renderJson(string $view, array $data = []):void
     {
         extract($data);
 
@@ -153,7 +165,7 @@ class CampaignsController
         return;
     }
 
-    private function isJsonRequest()
+    private function isJsonRequest():bool
     {
         return isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false;
     }
