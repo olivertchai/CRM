@@ -8,6 +8,10 @@ use Core\Constants\Constants;
 
 class Campaign
 {
+    /**
+     * Summary of errors
+     * @var array<string,string>
+     */
     private array $errors = [];
 
     private $id;
@@ -27,54 +31,54 @@ class Campaign
         $this->imagePath = $imagePath;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
-    public function getStartDate()
+    public function getStartDate(): ?DateTime
     {
         return $this->startDate;
     }
-    public function getEndDate()
+    public function getEndDate(): ?DateTime
     {
         return $this->endDate;
     }
-    public function getImagePath()
+    public function getImagePath(): ?string
     {
         return $this->imagePath;
     }
 
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         $this->title = $title;
     }
-    public function setDescription($description)
+    public function setDescription(?string $description)
     {
         $this->description = $description;
     }
-    public function setStartDate(DateTime $startDate)
+    public function setStartDate(?DateTime $startDate)
     {
         $this->startDate = $startDate;
     }
-    public function setEndDate(DateTime $endDate)
+    public function setEndDate(?DateTime $endDate)
     {
         $this->endDate = $endDate;
     }
-    public function setImagePath($imagePath)
+    public function setImagePath(?string $imagePath)
     {
         $this->imagePath = $imagePath;
     }
 
     // Validação básica: data final não pode ser antes da inicial
-    public function validateDateInitialEnd()
+    public function validateDateInitialEnd(): void
     {
         if ($this->endDate < $this->startDate) {
             throw new InvalidArgumentException("A data final não pode ser antes da data inicial.");
@@ -92,7 +96,7 @@ class Campaign
     }
 
 
-    public function destroy()
+    public function destroy(): void
     {
         $campaigns = file_exists(self::dbPath()) ? file(self::dbPath(), FILE_IGNORE_NEW_LINES) : [];
         unset($campaigns[$this->id]);
@@ -137,11 +141,15 @@ class Campaign
         return !empty($this->errors);
     }
 
-    public function getErrorsIndex($index): array
+    public function getErrorsIndex(string $index): string | null
     {
-        return $this->errors[$index] ?? [];
+        return $this->errors[$index] ?? null;
     }
 
+    /**
+     * Summary of all
+     * @return Campaign[]
+     */
     public static function all(): array
     {
         $campaigns = file_exists(self::dbPath()) ? file(self::dbPath(), FILE_IGNORE_NEW_LINES) : [];
@@ -151,7 +159,7 @@ class Campaign
         }, array_keys($campaigns), $campaigns);
     }
 
-    public static function findById($id): ?Campaign
+    public static function findById(int $id): ?Campaign
     {
         $campaigns = self::all();
 
@@ -164,7 +172,7 @@ class Campaign
         return null; // Retorna null se a campanha não for encontrada
     }
 
-    private static function dbPath()
+    private static function dbPath(): string
     {
 //        $dbName = $_ENV['DB_NAME'] ?? 'campaigns.txt';
 //        return Constants::databasePath() . $dbName;
