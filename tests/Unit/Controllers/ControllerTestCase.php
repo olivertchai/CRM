@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Controllers;
 
+use Core\Constants\Constants;
 use Tests\TestCase;
 
 abstract class ControllerTestCase extends TestCase
@@ -14,16 +15,25 @@ abstract class ControllerTestCase extends TestCase
      * @param array $regexPatterns<string>
      * @return void
      */
-    public function get(string $action, string $controllerClass, array $regexPatterns = []): void
+
+    public function setUp(): void
     {
-        $controller = new $controllerClass();
+        parent::setUp();
+        require Constants::rootPath()->join('config/routes.php');
+    }
 
-        // Se passarmos padrões, avisamos o PHPUnit para esperar por eles na tela
-        foreach ($regexPatterns as $pattern) {
-            $this->expectOutputRegex($pattern);
+    public function get(string $action, string $controller): string
+    {
+        $controller = new $controller();
+
+        ob_start();
+        try{
+            $controller->$action();
+            return ob_get_contents();
+        }catch (\Exception $e){
+            throw $e;
+        } finally {
+            ob_end_clean();
         }
-
-        // Executa a ação (index, show, etc)
-        $controller->$action();
     }
 }
