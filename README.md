@@ -28,17 +28,30 @@ $ chmod 665 ./database/campaign.txt
 
 #### Install the dependencies
 ```
+$ ./run composer install
+OU
 $ docker compose run --rm composer install
 ```
 
 #### Up the containers
 ```
+$ ./run up -d
+OU
 $ docker compose up -d
 ```
 
 #### Run the tests
 ```
+$ ./run test
+OU
 $ docker compose run --rm php ./vendor/bin/phpunit tests/Unit/Models/CampaignTest.php --color
+```
+
+#### Run the linters
+```
+$ ./run phpcs
+
+$ ./run phpstan
 ```
 
 Access [localhost](http://localhost)
