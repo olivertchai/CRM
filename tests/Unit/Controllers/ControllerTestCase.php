@@ -3,23 +3,31 @@
 namespace Tests\Unit\Controllers;
 
 use Core\Constants\Constants;
+use Core\Http\Request;
 use Tests\TestCase;
 
 abstract class ControllerTestCase extends TestCase
 {
-    // Mudamos para 'void' pois o PHPUnit vai validar a saída internamente
+    private Request $request;
+
     /**
-     * Summary of get
-     * @param string $action
-     * @param string $controllerClass
-     * @param array $regexPatterns<string>
+     * Summary of setUp
      * @return void
      */
-
     public function setUp(): void
     {
         parent::setUp();
         require Constants::rootPath()->join('config/routes.php');
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = "/";
+        $this->request = new Request();
+    }
+
+    public function tearDown(): void
+    {
+        unset($_SERVER['REQUEST_METHOD']);
+        unset($_SERVER['REQUEST_URI']);    
     }
 
     public function get(string $action, string $controller): string
@@ -28,7 +36,7 @@ abstract class ControllerTestCase extends TestCase
 
         ob_start();
         try{
-            $controller->$action();
+            $controller->$action($this->request);
             return ob_get_contents();
         }catch (\Exception $e){
             throw $e;

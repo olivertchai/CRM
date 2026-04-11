@@ -11,11 +11,9 @@
         <div class="flex gap-2">
             <button class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">Exportar PDF</button>
             <button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">Duplicar</button>
-            <form action="/pages/campaign/delete.php" method="POST" class="inline-block">
+            <form action="<?= route('campaigns.destroy', ['id' =>$campaign->getId()]) ?>" method="POST" class="inline-block">
                 <input type="hidden" name="_method" value="DELETE">
                 
-                <input type="hidden" name="campaign[id]" value="<?= $campaign->getId() ?>">
-
                 <button type="submit" class="inline-flex px-4 py-2 bg-white dark:bg-slate-800 border border-red-200 dark:border-red-900/30 rounded-lg text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors items-center gap-2 cursor-pointer">
                     <span class="material-symbols-outlined text-lg">delete</span>
                     Excluir

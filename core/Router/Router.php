@@ -4,7 +4,7 @@ namespace Core\Router;
 
 use Core\Constants\Constants;
 use Core\Exceptions\HTTPException;
-
+use Core\Http\Request;
 use Exception;
 
 class Router 
@@ -35,11 +35,22 @@ class Router
         return $route;
     }
 
+    /**
+     * @param string $name
+     * @param mixed[] $params
+     * @return string
+     */
     public function getRoutePathByName(string $name, array $params = []): string
     {
         foreach ($this->routes as $route) {
             if ($route->getName() === $name) {
-                return $route->getUri();
+                $keys = array_map(function ($key) {
+                    return '{' . $key . '}';
+                }, array_keys($params));
+
+                $values = array_values($params);
+
+                return str_replace($keys, $values, $route->getUri());
             }
         }
 
@@ -48,16 +59,14 @@ class Router
 
     public function dispatch(): object|bool
     {
-        $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
-        $uri = $_SERVER['REQUEST_URI'];
-
+        $request = new Request();
         foreach ($this->routes as $route) {
-            if ($route->match($method, $uri)) {
+            if ($route->match($request)) {
                 $class = $route->getControllerName();
                 $action = $route->getActionName();
 
                 $controller = new $class();
-                $controller->$action();
+                $controller->$action($request);
 
                 return $controller;
             }

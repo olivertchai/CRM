@@ -179,4 +179,16 @@ class Campaign
 
         return Constants::databasePath()->join($_ENV['DB_NAME']);
     }
+
+    private function toDatabaseString(): string
+    {
+        return implode(';', [
+            $this->id,
+            $this->title,
+            $this->description ?? '',
+            $this->startDate ? $this->startDate->format('Y-m-d') : '',
+            $this->endDate ? $this->endDate->format('Y-m-d') : '',
+            $this->imagePath ?? ''
+        ]);
+    }
 }
