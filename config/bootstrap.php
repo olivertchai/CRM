@@ -4,8 +4,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Core\Errors\ErrorsHandler;
 use Core\Env\EnvLoader;
+use Core\Router\Router;
 
 ErrorsHandler::init();
 EnvLoader::init();
-
-//require_once ROOT_PATH . '/core/debug/functions.php';
+Router::init();

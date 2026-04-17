@@ -52,6 +52,10 @@ $ docker compose run --rm php ./vendor/bin/phpunit tests/Unit/Models/CampaignTes
 $ ./run phpcs
 
 $ ./run phpstan
+
+$ ./run composer dump-autoload
+
+$ docker compose run --rm php ./vendor/bin/phpstan
 ```
 
 Access [localhost](http://localhost)

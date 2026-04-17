@@ -3,129 +3,101 @@
 namespace App\Controllers;
 
 use App\Models\Campaign;
+use Core\Http\Request;
 use DateTime;
 
 class CampaignsController
 {
     private  $layout = 'application';
 
-    public function index(): void
+    public function index(Request $request): void
     {
         $campaigns = Campaign::all();
 
         $title = 'Campanhas';
-        if ($this->isJsonRequest()) {
+        if ($request->acceptJson()) {
             $this->renderJson('index', compact('campaigns'));
         } else {
             $this->render('index', compact('campaigns', 'title'));
         }
     }
 
-    public function show(): void
+    public function show(Request $request): void
     {
-        $id = (int)$_GET['id'];
-        $campaign = Campaign::findById($id);
+        $params = $request->getParams();
 
-        if (!$campaign) {
-            header('Location: /pages/campaign/index.php');
-            exit;
-        }
+        $campaign = Campaign::findById($params['id']);
 
-        // Adicione o título aqui
         $title = 'Detalhes da Campanha';
-        // Inclua o 'title' no compact
         $this->render('show', compact('campaign', 'title'));
     }
 
     public function new(): void
     {
-        $campaign = new Campaign(id: null, title: '', description: '', startDate: new DateTime(), endDate: new DateTime());
+        $campaign = new Campaign(id: null, title: '');
         $title = 'Criar Nova Campanha';
         $this->render('new', compact('campaign', 'title'));
     }
 
-    public function create(): void
+    public function create(Request $request): void
     {
-        $method = $_SERVER['REQUEST_METHOD'];
-        if ($method != 'POST') {
-            $this->redirectTo('/pages/campaign');
-        }
-
-        $params = $_POST['campaign'];
+        $params = $request->getParams();
         $campaign = new Campaign(
             id : null,
-            title : trim($params['title']),
-            description : trim($params['description']),
-            startDate : new DateTime($params['start_date']),
-            endDate : new DateTime($params['end_date'])
+            title : trim($params['campaign']['title']),
         );
 
         if ($campaign->save()) {
-            $this->redirectTo('/pages/campaign');
+            $this->redirectTo(route('campaigns.index'));
         } else {
             // Recarrega o formulário com os erros
             $title = 'Criar Nova Campanha';
-            $this->render('create', compact('campaign', 'title'));
+            $this->render('new', compact('campaign', 'title'));
         }
     }
 
-    public function edit(): void
+    public function edit(Request $request): void
     {
-        $id = (int)$_GET['id'];
+        $params = $request->getParams();
 
-        $campaign = Campaign::findById($id);
+        $campaign = Campaign::findById($params['id']);
 
         if (!$campaign) {
-            $this->redirectTo('/pages/campaign');
+            $this->redirectTo(route('campaigns.index'));
         }
 
         $title = 'Editar Campanha';
         $this->render('edit', compact('campaign', 'title'));
     }
 
-    public function update(): void
+    public function update(Request $request): void
     {
-        $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
-
-        // Redireciona para a página de listagem se o método não for POST
-        if ($method != 'PUT') {
-            $this->redirectTo('/pages/campaign');
-        }
-
-        $params = $_POST['campaign'];
+        $params = $request->getParams();
 
         $campaign = Campaign::findById($params['id']);
-        $campaign->setTitle(trim($params['title']));
+        $campaign->setTitle(trim($params['campaign']['title']));
 
         if ($campaign->save()) {
-            $this->redirectTo('/pages/campaign');
+            $this->redirectTo(route('campaigns.index'));
         } else {
             // Recarrega o formulário
 
             $title = $campaign['title'];
-            $this->render('update', compact('campaign', 'title'));
+            $this->render('edit', compact('campaign', 'title'));
         }
     }
 
-    public function delete(): void
+    public function delete(Request $request): void
     {
-        $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
-        // Redireciona para a página de listagem se o método não for DELETE
-        if ($method != 'DELETE') {
-            $this->redirectTo('/pages/campaign');
-        }
-
-        $params = $_POST['campaign'];
+        $params = $request->getParams();
         $campaign = Campaign::findById($params['id']);
 
         if ($campaign) {
             $campaign->destroy();
         }
 
-        $this->redirectTo('/pages/campaign');
-
-        require '/var/www/app/models/Campaign.php';
+        $this->redirectTo(route('campaigns.index'));
     }
 
     /**
@@ -164,10 +136,5 @@ class CampaignsController
         require $view;
         echo json_encode($json);
         return;
-    }
-
-    private function isJsonRequest():bool
-    {
-        return isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false;
     }
 }
