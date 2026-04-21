@@ -87,7 +87,7 @@ class CampaignsController
         }
     }
 
-    public function delete(Request $request): void
+    public function destroy(Request $request): void
     {
 
         $params = $request->getParams();
