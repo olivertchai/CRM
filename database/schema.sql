@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS campaigns;
+
+CREATE TABLE campaigns (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL
+);
