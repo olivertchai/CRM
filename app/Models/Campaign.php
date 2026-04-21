@@ -4,7 +4,7 @@ namespace App\Models;
 
 use DateTime;
 use InvalidArgumentException;
-use Core\Constants\Constants;
+use Core\Database\Database;
 
 class Campaign
 {
@@ -96,26 +96,38 @@ class Campaign
     }
 
 
-    public function destroy(): void
+    public function destroy(): bool
     {
-        $campaigns = file_exists(self::dbPath()) ? file(self::dbPath(), FILE_IGNORE_NEW_LINES) : [];
-        unset($campaigns[$this->id]);
-        $data = implode(PHP_EOL, $campaigns);
-        file_put_contents(self::dbPath(), $data . PHP_EOL);
+        $pdo = Database::getDatabaseConn();
+        
+        $sql = 'DELETE FROM campaigns WHERE id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+
+        $stmt->execute();
+
+        return ($stmt->rowCount() !== 0);
     }
 
     public function save(): bool
     {
         if ($this->isValid()) {
+            $pdo = Database::getDatabaseConn();
             if ($this->newRecord()) {
-                $this->id = file_exists(self::dbPath()) ? count(file(self::dbPath())) : 0;
-                file_put_contents(self::dbPath(), $this->title . PHP_EOL, FILE_APPEND);
-            } else {
-                $campaigns = file_exists(self::dbPath()) ? file(self::dbPath(), FILE_IGNORE_NEW_LINES) : [];
-                $campaigns[$this->id] = $this->title;
+                $sql = "INSERT INTO campaigns (title) VALUES (:title);";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':title', $this->title);
 
-                $data = implode(PHP_EOL, $campaigns);
-                file_put_contents(self::dbPath(), $data . PHP_EOL);
+                $stmt->execute();
+
+                $this->id = (int) $pdo->lastInsertId();
+            } else {
+                $sql = "UPDATE campaigns SET title = :title WHERE id = :id;";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':title', $this->title);
+                $stmt->bindParam(':id', $this->id);
+
+                $stmt->execute();
             }
             return true;
         }
@@ -152,43 +164,34 @@ class Campaign
      */
     public static function all(): array
     {
-        $campaigns = file_exists(self::dbPath()) ? file(self::dbPath(), FILE_IGNORE_NEW_LINES) : [];
-        return array_map(function ($id, $title) {
-            // Aqui você pode implementar a lógica para criar objetos Campaign a partir das linhas do arquivo
-            return new Campaign((int)$id, $title, null, new DateTime(), new DateTime());
-        }, array_keys($campaigns), $campaigns);
+        $campaigns = [];
+
+        $pdo = Database::getDatabaseConn();
+        $resp = $pdo->query('SELECT id, title FROM campaigns');
+
+        foreach($resp as $row){
+            $campaigns[] = new Campaign(id: $row['id'], title: $row['title']); 
+        }
+
+        return $campaigns;
     }
 
     public static function findById(int $id): ?Campaign
     {
-        $campaigns = self::all();
+        $pdo = Database::getDatabaseConn();
 
-        foreach ($campaigns as $campaign) {
-            if ($campaign->getId() === (int)$id) {
-                return $campaign;
-            }
+        $sql = 'SELECT id, title FROM campaigns WHERE id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $id);
+
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0) {
+            return null;
         }
 
-        return null; // Retorna null se a campanha não for encontrada
-    }
+        $row = $stmt->fetch();
 
-    private static function dbPath(): string
-    {
-//        $dbName = $_ENV['DB_NAME'] ?? 'campaigns.txt';
-//        return Constants::databasePath() . $dbName;
-
-        return Constants::databasePath()->join($_ENV['DB_NAME']);
-    }
-
-    private function toDatabaseString(): string
-    {
-        return implode(';', [
-            $this->id,
-            $this->title,
-            $this->description ?? '',
-            $this->startDate ? $this->startDate->format('Y-m-d') : '',
-            $this->endDate ? $this->endDate->format('Y-m-d') : '',
-            $this->imagePath ?? ''
-        ]);
+        return new Campaign(id: $row['id'], title: $row['title']);
     }
 }
