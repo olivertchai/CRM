@@ -21,10 +21,16 @@ class Campaign
     private ?DateTime $endDate;
     private ?string $imagePath; // Novo atributo para o caminho da imagem
 
-    public function __construct($id, string $title, ?string $description = null, ?DateTime $startDate = null, ?DateTime $endDate = null, ?string $imagePath = null)
-    {
-        $this->id = $id;
+    public function __construct(
+        string $title, 
+        ?int $id = null, 
+        ?string $description = null, 
+        ?DateTime $startDate = null, 
+        ?DateTime $endDate = null, 
+        ?string $imagePath = null
+    ) {
         $this->title = $title;
+        $this->id = $id;
         $this->description = $description;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
