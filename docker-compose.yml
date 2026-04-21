@@ -10,13 +10,30 @@ services:
     networks:
       - app-network
   php:
-    image: php:8.3.4-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - .:/var/www
     networks:
       - app-network
     working_dir: /var/www
 
+  db:
+    image: postgres:15-alpine
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: "$DB_DATABASE"
+      POSTGRES_USER: "$DB_USERNAME"
+      POSTGRES_PASSWORD: "$DB_PASSWORD"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network # Adicionado para o PHP conseguir conectar
+    ports:
+      - "5432:5432"
+      
   composer:
     image: composer:2.7.2
     user: 1000:1000
@@ -30,3 +47,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres_data:
