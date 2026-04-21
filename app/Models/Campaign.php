@@ -200,4 +200,16 @@ class Campaign
 
         return new Campaign(id: $row['id'], title: $row['title']);
     }
+
+    private function toDatabaseString(): string
+    {
+        return implode(';', [
+            $this->id,
+            $this->title,
+            $this->description ?? '',
+            $this->startDate ? $this->startDate->format('Y-m-d') : '',
+            $this->endDate ? $this->endDate->format('Y-m-d') : '',
+            $this->imagePath ?? ''
+        ]);
+    }
 }
