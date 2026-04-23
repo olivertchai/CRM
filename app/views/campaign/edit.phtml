@@ -42,6 +42,7 @@
 
       <form action="<?= route('campaigns.update', ['id' =>$campaign->getId()]) ?>" method="POST" class="flex flex-col gap-6">
           <input type="hidden" name="_method" value="PUT">
+          <input type="hidden" name="id" value="<?= $campaign->getId() ?>">
 
         <!-- Row 1 -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
