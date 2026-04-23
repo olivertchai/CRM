@@ -20,12 +20,6 @@ $ cd crm
 $ cp .env.example .env
 ```
 
-#### Define the file database
-```
-$ touch ./database/campaign.txt
-$ chmod 665 ./database/campaign.txt
-```
-
 #### Install the dependencies
 ```
 $ ./run composer install

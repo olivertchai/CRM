@@ -11,6 +11,7 @@ Route::post('/pages/campaign', [CampaignsController::class, 'create'])->name('ca
 
 // Retrieve
 Route::get('/campaigns', [CampaignsController::class, 'index'])->name('campaigns.index');
+Route::get('/campaigns/page/{page}', [CampaignsController::class, 'index'])->name('campaigns.paginate');
 Route::get('/campaigns/{id}', [CampaignsController::class, 'show'])->name('campaigns.show');
 
 // Update
