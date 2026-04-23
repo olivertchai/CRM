@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTime;
 use InvalidArgumentException;
 use Core\Database\Database;
+use Lib\Paginator;
 
 class Campaign
 {
@@ -201,15 +202,30 @@ class Campaign
         return new Campaign(id: $row['id'], title: $row['title']);
     }
 
-    private function toDatabaseString(): string
+    public static function paginate(int $page = 1, int $per_page = 10): Paginator
     {
-        return implode(';', [
-            $this->id,
-            $this->title,
-            $this->description ?? '',
-            $this->startDate ? $this->startDate->format('Y-m-d') : '',
-            $this->endDate ? $this->endDate->format('Y-m-d') : '',
-            $this->imagePath ?? ''
-        ]);
+        return new Paginator(
+            class: Campaign::class,
+            page: $page,
+            per_page: $per_page,
+            table: 'campaigns',
+            attributes: ['title']
+        );
+    }
+
+    public static function fromArray(array $data): self
+    {
+        // Aqui nós convertemos as strings de data que vêm do banco em objetos DateTime
+        $startDate = !empty($data['start_date']) ? new \DateTime($data['start_date']) : null;
+        $endDate   = !empty($data['end_date'])   ? new \DateTime($data['end_date'])   : null;
+
+        return new self(
+            title: $data['title'] ?? 'Sem Título',
+            id: $data['id'] ?? null,
+            description: $data['description'] ?? null,
+            startDate: $startDate,
+            endDate: $endDate,
+            imagePath: $data['image_path'] ?? null
+        );
     }
 }

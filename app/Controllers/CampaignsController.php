@@ -12,13 +12,14 @@ class CampaignsController
 
     public function index(Request $request): void
     {
-        $campaigns = Campaign::all();
+        $paginator = Campaign::paginate(page: $request->getParam('page', 1));
+        $campaigns = $paginator->registers();
 
         $title = 'Campanhas';
         if ($request->acceptJson()) {
-            $this->renderJson('index', compact('campaigns'));
+            $this->renderJson('index', compact('paginator','campaigns', 'title'));
         } else {
-            $this->render('index', compact('campaigns', 'title'));
+            $this->render('index', compact('paginator','campaigns', 'title'));
         }
     }
 
