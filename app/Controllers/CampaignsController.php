@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Campaign;
 use Core\Http\Request;
 use DateTime;
+use Lib\FlashMessage;
 
 class CampaignsController
 {
@@ -49,8 +50,10 @@ class CampaignsController
         );
 
         if ($campaign->save()) {
+            FlashMessage::success('Campanha registrada com sucesso!');
             $this->redirectTo(route('campaigns.index'));
         } else {
+            FlashMessage::danger('Existe dados incorretor, por favor verifique!');
             // Recarrega o formulário com os erros
             $title = 'Criar Nova Campanha';
             $this->render('new', compact('campaign', 'title'));
@@ -79,11 +82,13 @@ class CampaignsController
         $campaign->setTitle(trim($params['campaign']['title']));
 
         if ($campaign->save()) {
+            FlashMessage::success('Campanha atualizada com sucesso!');
             $this->redirectTo(route('campaigns.index'));
         } else {
+            FlashMessage::danger('Existe dados incorretor, por favor verifique!');
             // Recarrega o formulário
-
-            $title = $campaign['title'];
+            //$title = $campaign['title'];
+            $title = 'Editar Campanha';
             $this->render('edit', compact('campaign', 'title'));
         }
     }
@@ -97,7 +102,7 @@ class CampaignsController
         if ($campaign) {
             $campaign->destroy();
         }
-
+        FlashMessage::success('Campanha removida com sucesso!');
         $this->redirectTo(route('campaigns.index'));
     }
 
