@@ -23,8 +23,8 @@ class AuthenticationsController
         $user = User::findByEmail($params['email']);
 
         if ($user && $user->authenticate($params['password'])) {
+            Auth::login($user);
             FlashMessage::success('Login realizado com sucesso!');
-
             $this->redirectTo(route('campaigns.index'));
         } else {
             FlashMessage::danger('Email e/ou senha inválidos!');
@@ -33,6 +33,7 @@ class AuthenticationsController
     }
     public function destroy(): void
     {
+        Auth::logout();
         FlashMessage::success('Logout realizado com sucesso!');
         $this->redirectTo(route('users.login'));
     }

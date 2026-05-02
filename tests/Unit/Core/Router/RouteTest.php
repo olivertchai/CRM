@@ -174,11 +174,27 @@ class RouteTest extends TestCase
 
     private function request(string $method, string $uri): Request 
     {
-    require_once Constants::rootPath()->join('tests/Unit/Core/Http/header_mock.php');
+        require_once Constants::rootPath()->join('tests/Unit/Core/Http/header_mock.php');
 
-    $_SERVER['REQUEST_METHOD'] = $method;
-    $_SERVER['REQUEST_URI'] = $uri;
-    $_REQUEST = [];
-    return new Request();
-}
+        $_SERVER['REQUEST_METHOD'] = $method;
+        $_SERVER['REQUEST_URI'] = $uri;
+        $_REQUEST = [];
+        return new Request();
+    }
+
+    public function test_add_middleware(): void
+    {
+        $route = new Route(method: 'GET', uri: '/test', controllerName: 'MockController', actionName: 'show');
+        $middleware = $this->createMock(Middleware::class);
+
+        $route->addMiddleware($middleware);
+
+        $reflection = new \ReflectionObject($route);
+        $property = $reflection->getProperty('middlewares');
+        $property->setAccessible(true);
+
+        $middlewares = $property->getValue($route);
+
+        $this->assertContains($middleware, $middlewares);
+    }
 }

@@ -3,13 +3,26 @@
 namespace App\Controllers;
 
 use App\Models\Campaign;
+use App\Models\User;
 use Core\Http\Request;
 use DateTime;
+use Lib\Authentication\Auth;
 use Lib\FlashMessage;
+use App\Middleware\Authenticate;
 
 class CampaignsController
 {
     private  $layout = 'application';
+    private ?User $currentUser = null;
+
+    public function currentUser(): ?User
+    {
+        if ($this->currentUser === null) {
+            $this->currentUser = Auth::user();
+        }
+
+        return $this->currentUser;
+    }
 
     public function index(Request $request): void
     {
@@ -119,10 +132,11 @@ class CampaignsController
         $view = '/var/www/app/views/campaign/' . $view . '.phtml';
         require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
     }
-    private function redirectTo(string $path): void
+
+    private function redirectTo(string $location): void
     {
-        header('Location: ' . $path);
-        exit();
+        header('Location: ' . $location);
+        exit;
     }
 
     /**
