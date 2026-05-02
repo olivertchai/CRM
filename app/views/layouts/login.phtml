@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login de Usuário - Roster</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            roster: {
+              orange: '#EC5B13',
+              'orange-light': '#F06522',
+              'orange-lighter': '#FF793D',
+            },
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="min-h-screen bg-white font-sans flex items-center justify-center p-4">
+  <main class="w-full max-w-md">
+    <!-- Logo + Título -->
+    <div class="flex flex-col items-center text-center mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-9 h-9 rounded-md bg-roster-orange flex items-center justify-center" aria-hidden="true">
+          <!-- Ícone de gráfico de barras -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 20V12M6 20a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2M6 20a2 2 0 0 0 2-2v-8a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v10a2 2 0 0 0 2 2M12 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2"/>
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-900">Roster</h1>
+      </div>
+      <p class="text-sm text-gray-500">Faça login para acessar sua conta</p>
+    </div>
+    <?php require __DIR__ . '/_flash_message.phtml'; ?>
+    <?php require $view ?>
+  </main>
+</body>
+</html>

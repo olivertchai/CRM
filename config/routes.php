@@ -2,6 +2,7 @@
 
 use App\Controllers\CampaignsController;
 use Core\Router\Route;
+use App\Controllers\AuthenticationsController;
 
 Route::get('/', [CampaignsController::class, 'index'])->name('root');
 
@@ -21,4 +22,7 @@ Route::put('/campaigns/{id}', [CampaignsController::class, 'update'])->name('cam
 // Delete
 Route::delete('/campaigns/{id}', [CampaignsController::class, 'destroy'])->name('campaigns.destroy');
 
-
+// Authentication
+Route::get('/login', [AuthenticationsController::class, 'new'])->name('users.login');
+Route::post('/login', [AuthenticationsController::class, 'authenticate'])->name('users.authenticate');
+Route::get('/logout', [AuthenticationsController::class, 'destroy'])->name('users.logout');
