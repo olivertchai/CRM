@@ -117,7 +117,7 @@
         <?php if ($this->currentUser() && $this->currentUser()->isAdmin()): ?>
           <a
             class="<?php echo $isUsuariosActive ? 'text-primary text-sm font-bold border-b-2 border-primary pb-1' : 'text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors'; ?>"
-            href="#"
+            href="<?php echo route('users.index'); ?>"
             >Usuários</a
           >
         <?php endif; ?>

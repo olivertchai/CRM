@@ -3,6 +3,7 @@
 use App\Controllers\CampaignsController;
 use Core\Router\Route;
 use App\Controllers\AuthenticationsController;
+use App\Controllers\UsersController;
 
 // Authentication
 Route::get('/login', [AuthenticationsController::class, 'new'])->name('users.login');
@@ -29,4 +30,7 @@ Route::middleware('auth')->group(function () {
 
     // Logout
     Route::get('/logout', [AuthenticationsController::class, 'destroy'])->name('users.logout');
+
+    //users
+    Route::get('/users', [UsersController::class, 'index'])->name('users.index');
 });
