@@ -12,7 +12,8 @@ use App\Middleware\Authenticate;
 
 class CampaignsController
 {
-    private  $layout = 'application';
+    private $layout = 'application';
+
     private ?User $currentUser = null;
 
     public function currentUser(): ?User
@@ -31,9 +32,9 @@ class CampaignsController
 
         $title = 'Campanhas';
         if ($request->acceptJson()) {
-            $this->renderJson('index', compact('paginator','campaigns', 'title'));
+            $this->renderJson('index', compact('paginator', 'campaigns', 'title'));
         } else {
-            $this->render('index', compact('paginator','campaigns', 'title'));
+            $this->render('index', compact('paginator', 'campaigns', 'title'));
         }
     }
 
@@ -108,7 +109,6 @@ class CampaignsController
 
     public function destroy(Request $request): void
     {
-
         $params = $request->getParams();
         $campaign = Campaign::findById($params['id']);
 
@@ -155,6 +155,5 @@ class CampaignsController
         header('Content-Type: application/json, charset=utf-8');
         require $view;
         echo json_encode($json);
-        return;
     }
 }

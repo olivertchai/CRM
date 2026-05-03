@@ -23,11 +23,11 @@ class Campaign
     private ?string $imagePath; // Novo atributo para o caminho da imagem
 
     public function __construct(
-        string $title, 
-        ?int $id = null, 
-        ?string $description = null, 
-        ?DateTime $startDate = null, 
-        ?DateTime $endDate = null, 
+        string $title,
+        ?int $id = null,
+        ?string $description = null,
+        ?DateTime $startDate = null,
+        ?DateTime $endDate = null,
         ?string $imagePath = null
     ) {
         $this->title = $title;
@@ -102,11 +102,10 @@ class Campaign
         return $this->startDate->format($format) . ' até ' . $this->endDate->format($format);
     }
 
-
     public function destroy(): bool
     {
         $pdo = Database::getDatabaseConn();
-        
+
         $sql = 'DELETE FROM campaigns WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $this->id);
@@ -152,7 +151,8 @@ class Campaign
 
         if (empty($this->title)) {
             $this->errors[] = 'O título da campanha é obrigatório.';
-        }return empty($this->errors);
+        }
+        return empty($this->errors);
     }
 
     public function hasErrors(): bool
@@ -176,8 +176,8 @@ class Campaign
         $pdo = Database::getDatabaseConn();
         $resp = $pdo->query('SELECT id, title FROM campaigns');
 
-        foreach($resp as $row){
-            $campaigns[] = new Campaign(id: $row['id'], title: $row['title']); 
+        foreach ($resp as $row) {
+            $campaigns[] = new Campaign(id: $row['id'], title: $row['title']);
         }
 
         return $campaigns;
@@ -193,7 +193,7 @@ class Campaign
 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0) {
+        if ($stmt->rowCount() == 0) {
             return null;
         }
 

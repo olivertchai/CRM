@@ -27,12 +27,12 @@ class Route
     public function name(string $name): void
     {
         $this->name = $name;
-    } 
+    }
 
-    public function getName():string
+    public function getName(): string
     {
         return $this->name;
-    } 
+    }
 
     public function getMethod(): string
     {
@@ -66,7 +66,7 @@ class Route
         }
     }
 
-    public function match (Request $request): bool
+    public function match(Request $request): bool
     {
         return $this->isSameMethod($request) && $this->isSameUri($request);
     }
@@ -86,7 +86,7 @@ class Route
         if (sizeof($splittedRoute) !== sizeof($splittedUri)) {
             return false;
         }
-        
+
         $params = [];
         foreach ($splittedRoute as $index => $routePart) {
             if (preg_match('/^{[a-z,_]+}$/', $routePart)) {
@@ -152,5 +152,4 @@ class Route
     {
         return new RouteWrapperMiddleware($middleware);
     }
-
 }

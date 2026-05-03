@@ -32,6 +32,4 @@ class Auth
     {
         return isset($_SESSION['user']['id']) && self::user() !== null;
     }
-
-
 }

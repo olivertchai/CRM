@@ -5,7 +5,6 @@ namespace Lib;
 use Core\Constants\Constants;
 use Core\Database\Database;
 use PDO;
-use PDOStatement;
 
 class Paginator
 {
@@ -15,14 +14,13 @@ class Paginator
     private int $offset = 0;
     private array $registers = [];
 
-    public function __construct
-    (
+    public function __construct(
         private string $class,
         private int $page,
         private int $per_page,
         private string $table,
         private array $attributes,
-    ){
+    ) {
         $this->loadTotals();
         $this->loadRegisters();
     }
@@ -54,12 +52,12 @@ class Paginator
 
     public function previousPage(): int
     {
-        return $this->page -1;
+        return $this->page - 1;
     }
 
     public function nextPage(): int
     {
-        return $this->page +1;
+        return $this->page + 1;
     }
 
     public function hasPreviousPage(): bool
@@ -128,14 +126,12 @@ class Paginator
         $stmt->bindValue('limit', $this->per_page, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $this->offset, PDO::PARAM_INT);
 
-        //$this->bindConditions($stmt);
-
         $stmt->execute();
         $resp = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->totalOfRegistersOfPage = $stmt->rowCount();
 
         foreach ($resp as $row) {
-            $this->registers[] = $this->class::fromArray($row);;
+            $this->registers[] = $this->class::fromArray($row);
         }
     }
 }

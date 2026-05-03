@@ -7,7 +7,7 @@ use Core\Exceptions\HTTPException;
 use Core\Http\Request;
 use Exception;
 
-class Router 
+class Router
 {
     private static Router|null $instance = null;
     /** @var Route[] $routes */

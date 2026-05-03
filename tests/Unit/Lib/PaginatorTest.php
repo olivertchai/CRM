@@ -60,7 +60,7 @@ class PaginatorTest extends TestCase
     {
         $this->assertEquals(2, $this->paginator->nextPage());
     }
-    
+
     public function test_has_previous_page(): void
     {
         $this->assertFalse($this->paginator->hasPreviousPage());
@@ -96,5 +96,4 @@ class PaginatorTest extends TestCase
         $paginator = new Paginator(Campaign::class, 1, 10, 'campaigns', ['title', 'user_id']);
         $this->assertEquals($this->campaigns, $paginator->registers());
     }
-    
 }

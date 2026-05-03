@@ -146,20 +146,22 @@ class UserTest extends TestCase
     {
         // 1. Preparamos o cenário criando dois usuários na memória (não precisa salvar no banco)
         $usuarioAdmin = new \App\Models\User(
-            name: 'Chefe', 
-            email: 'admin@teste.com', 
+            name: 'Chefe',
+            email: 'admin@teste.com',
             role: 'admin'
         );
 
         $usuarioMarketing = new \App\Models\User(
-            name: 'Gerente', 
-            email: 'marketing@teste.com', 
+            name: 'Gerente',
+            email: 'marketing@teste.com',
             role: 'manager_marketing'
         );
 
         // 2. Validamos se o método isAdmin() responde corretamente para cada um
         $this->assertTrue($usuarioAdmin->isAdmin(), 'O usuário com cargo admin deve retornar true no isAdmin().');
-        
-        $this->assertFalse($usuarioMarketing->isAdmin(), 'O usuário com cargo manager_marketing deve retornar false no isAdmin().');
+        $this->assertFalse(
+            $usuarioMarketing->isAdmin(),
+            'O usuário com cargo manager_marketing deve retornar false no isAdmin().'
+        );
     }
 }

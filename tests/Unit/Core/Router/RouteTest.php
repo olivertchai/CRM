@@ -150,7 +150,7 @@ class RouteTest extends TestCase
         $route->name('root');
 
         $this->assertEquals('root', $route->getName());
-    } 
+    }
 
     public function test_match_should_return_true_if_method_and_uri_with_params_match(): void
     {
@@ -161,7 +161,7 @@ class RouteTest extends TestCase
         $this->assertFalse($route->match($this->request('GET', '/test/1/edit')));
         $this->assertFalse($route->match($this->request('GET', '/test')));
     }
-    
+
     public function test_match_should_return_true_and_add_params_if_method_and_uri_with_params_match(): void
     {
         $route = new Route(method: 'GET', uri: '/test/{id}', controllerName: 'MockController', actionName: 'show');
@@ -172,7 +172,7 @@ class RouteTest extends TestCase
         $this->assertEquals(['id' => 1], $request->getParams());
     }
 
-    private function request(string $method, string $uri): Request 
+    private function request(string $method, string $uri): Request
     {
         require_once Constants::rootPath()->join('tests/Unit/Core/Http/header_mock.php');
 
