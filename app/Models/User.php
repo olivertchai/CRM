@@ -20,7 +20,8 @@ class User
         private string|null $name =null, 
         private string|null $email =null, 
         private string|null $password = null,
-        private string|null $password_confirmation = null
+        private string|null $password_confirmation = null,
+        private string $role = 'manager_marketing'
     ) {
 
     }
@@ -40,6 +41,11 @@ class User
         return $this->email;
     }
 
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
     public function setId(int $id): void
     {
         $this->id = $id;
@@ -53,6 +59,17 @@ class User
     public function setEmail(string $email): void
     {
         $this->email = $email;
+    }
+
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
+    }
+
+    // A mágica acontece aqui: um método facilitador para checar se é admin
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 
     public function destroy(): bool
@@ -73,11 +90,11 @@ class User
         if ($this->isValid()) {
             $pdo = Database::getDatabaseConn();
             if ($this->newRecord()) {
-                $sql = 'INSERT INTO users (name, email, password) VALUES (:name, :email, :password)';
+                $sql = 'INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, :role);';
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(':name', $this->name);
                 $stmt->bindParam(':email', $this->email);
-
+                $stmt->bindParam(':role', $this->role);
                 $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
                 $stmt->bindParam(':password', $password_hash);
 
@@ -85,10 +102,11 @@ class User
 
                 $this->id = (int) $pdo->lastInsertId();
             } else {
-                $sql = 'UPDATE users SET name = :name, email = :email WHERE id = :id;';
+                $sql = 'UPDATE users SET name = :name, email = :email, role = :role WHERE id = :id;';
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(':name', $this->name);
                 $stmt->bindParam(':email', $this->email);
+                $stmt->bindParam(':role', $this->role);
                 $stmt->bindParam(':id', $this->id);
                 $stmt->execute();
             }
@@ -170,10 +188,10 @@ class User
         $users = [];
 
         $pdo = Database::getDatabaseConn();
-        $resp = $pdo->query('SELECT id, name, email FROM users');
+        $resp = $pdo->query('SELECT id, name, email, role FROM users');
 
         foreach($resp as $row){
-            $users[] = new User(id: $row['id'], name: $row['name'], email: $row['email']); 
+            $users[] = new User(id: $row['id'], name: $row['name'], email: $row['email'], role: $row['role']); 
         }
 
         return $users;
@@ -183,7 +201,7 @@ class User
     {
         $pdo = Database::getDatabaseConn();
 
-        $sql = 'SELECT id, name, email FROM users WHERE id = :id';
+        $sql = 'SELECT id, name, email, role FROM users WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
 
@@ -195,14 +213,14 @@ class User
 
         $row = $stmt->fetch();
 
-        return new User(id: $row['id'], name: $row['name'], email: $row['email']);
+        return new User(id: $row['id'], name: $row['name'], email: $row['email'], role: $row['role']);
     }
 
     public static function findByEmail(string $email): User | null
     {
         $pdo = Database::getDatabaseConn();
 
-        $sql = 'SELECT id, name, email FROM users WHERE email = :email';
+        $sql = 'SELECT id, name, email, role FROM users WHERE email = :email';
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':email', $email);
 
@@ -214,6 +232,6 @@ class User
 
         $row = $stmt->fetch();
 
-        return new User(id: $row['id'], name: $row['name'], email: $row['email']);
+        return new User(id: $row['id'], name: $row['name'], email: $row['email'], role: $row['role']);
     }
 }

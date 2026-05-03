@@ -18,7 +18,8 @@ class UserTest extends TestCase
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
+            'role' => 'manager_marketing'
         ]);
         $this->user->save();
 
@@ -26,7 +27,8 @@ class UserTest extends TestCase
             'name' => 'User 2',
             'email' => 'fulano1@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
+            'role' => 'admin'
         ]);
         $this->user2->save();
     }
@@ -138,5 +140,26 @@ class UserTest extends TestCase
 
         $this->assertTrue($this->user->authenticate('123456'));
         $this->assertFalse($this->user->authenticate('654321'));
+    }
+
+    public function test_verifica_se_a_logica_de_admin_funciona_corretamente()
+    {
+        // 1. Preparamos o cenário criando dois usuários na memória (não precisa salvar no banco)
+        $usuarioAdmin = new \App\Models\User(
+            name: 'Chefe', 
+            email: 'admin@teste.com', 
+            role: 'admin'
+        );
+
+        $usuarioMarketing = new \App\Models\User(
+            name: 'Gerente', 
+            email: 'marketing@teste.com', 
+            role: 'manager_marketing'
+        );
+
+        // 2. Validamos se o método isAdmin() responde corretamente para cada um
+        $this->assertTrue($usuarioAdmin->isAdmin(), 'O usuário com cargo admin deve retornar true no isAdmin().');
+        
+        $this->assertFalse($usuarioMarketing->isAdmin(), 'O usuário com cargo manager_marketing deve retornar false no isAdmin().');
     }
 }
