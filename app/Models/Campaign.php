@@ -15,7 +15,7 @@ class Campaign
      */
     private array $errors = [];
 
-    private $id;
+    private ?int $id;
     private string $title;
     private ?string $description;
     private ?DateTime $startDate;
@@ -142,7 +142,7 @@ class Campaign
 
     public function newRecord(): bool
     {
-        return $this->id === null || $this->id === '';
+        return $this->id === null;
     }
 
     public function isValid(): bool
@@ -213,6 +213,16 @@ class Campaign
         );
     }
 
+    /**
+     * @param array{
+     *   id?: int|null,
+     *   title: string,
+     *   description?: string|null,
+     *   start_date?: string|null,
+     *   end_date?: string|null,
+     *   image_path?: string|null
+     * } $data
+     */
     public static function fromArray(array $data): self
     {
         // Aqui nós convertemos as strings de data que vêm do banco em objetos DateTime
@@ -220,7 +230,7 @@ class Campaign
         $endDate   = !empty($data['end_date'])   ? new \DateTime($data['end_date'])   : null;
 
         return new self(
-            title: $data['title'] ?? 'Sem Título',
+            title: $data['title'],
             id: $data['id'] ?? null,
             description: $data['description'] ?? null,
             startDate: $startDate,

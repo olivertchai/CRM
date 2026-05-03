@@ -60,6 +60,11 @@ class User
         $this->email = $email;
     }
 
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
     public function setRole(string $role): void
     {
         $this->role = $role;

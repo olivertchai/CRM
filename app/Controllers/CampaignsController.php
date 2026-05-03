@@ -12,8 +12,7 @@ use App\Middleware\Authenticate;
 
 class CampaignsController
 {
-    private $layout = 'application';
-
+    private string $layout = 'application';
     private ?User $currentUser = null;
 
     public function currentUser(): ?User
@@ -120,9 +119,8 @@ class CampaignsController
     }
 
     /**
-     * Summary of render
      * @param string $view
-     * @param array $data<string, mixed>
+     * @param array<string, mixed> $data
      * @return void
      */
     private function render(string $view, array $data = []): void

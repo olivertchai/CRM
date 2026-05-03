@@ -46,6 +46,8 @@ $ docker compose run --rm php ./vendor/bin/phpunit tests/Unit/Models/CampaignTes
 $ ./run phpcs
 
 $ ./run phpstan
+Ou
+$ vendor/bin/phpstan analyse
 
 $ ./run composer dump-autoload
 
