@@ -16,14 +16,13 @@ class User
     private array $errors = [];
 
     public function __construct(
-        private int $id = -1, 
-        private string|null $name =null, 
-        private string|null $email =null, 
+        private int $id = -1,
+        private string|null $name = null,
+        private string|null $email = null,
         private string|null $password = null,
         private string|null $password_confirmation = null,
         private string $role = 'manager_marketing'
     ) {
-
     }
 
     public function getId(): int
@@ -61,6 +60,11 @@ class User
         $this->email = $email;
     }
 
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
     public function setRole(string $role): void
     {
         $this->role = $role;
@@ -75,7 +79,7 @@ class User
     public function destroy(): bool
     {
         $pdo = Database::getDatabaseConn();
-        
+
         $sql = 'DELETE FROM users WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $this->id);
@@ -142,10 +146,12 @@ class User
     {
         return $this->id === -1;
     }
+
     public function hasErrors(): bool
     {
         return !empty($this->errors);
     }
+
     public function errors(string $index): string | null
     {
         if (isset($this->errors[$index])) {
@@ -190,8 +196,8 @@ class User
         $pdo = Database::getDatabaseConn();
         $resp = $pdo->query('SELECT id, name, email, role FROM users');
 
-        foreach($resp as $row){
-            $users[] = new User(id: $row['id'], name: $row['name'], email: $row['email'], role: $row['role']); 
+        foreach ($resp as $row) {
+            $users[] = new User(id: $row['id'], name: $row['name'], email: $row['email'], role: $row['role']);
         }
 
         return $users;
@@ -207,7 +213,7 @@ class User
 
         $stmt->execute();
 
-        if($stmt->rowCount() == 0) {
+        if ($stmt->rowCount() == 0) {
             return null;
         }
 

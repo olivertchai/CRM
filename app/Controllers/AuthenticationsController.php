@@ -54,6 +54,4 @@ class AuthenticationsController
         header('Location: ' . $location);
         exit;
     }
-
-
 }

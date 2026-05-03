@@ -27,7 +27,7 @@ abstract class ControllerTestCase extends TestCase
     public function tearDown(): void
     {
         unset($_SERVER['REQUEST_METHOD']);
-        unset($_SERVER['REQUEST_URI']);    
+        unset($_SERVER['REQUEST_URI']);
     }
 
     public function get(string $action, string $controller): string
@@ -35,10 +35,10 @@ abstract class ControllerTestCase extends TestCase
         $controller = new $controller();
 
         ob_start();
-        try{
+        try {
             $controller->$action($this->request);
             return ob_get_contents();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         } finally {
             ob_end_clean();
