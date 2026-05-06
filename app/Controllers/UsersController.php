@@ -4,13 +4,13 @@ namespace App\Controllers;
 
 use App\Models\User;
 use Lib\Authentication\Auth;
+use Lib\FlashMessage;
 
 class UsersController
 {
     private string $layout = 'application';
     private ?User $currentUser = null;
 
-    // 1. Trazemos a função currentUser para cá também
     public function currentUser(): ?User
     {
         if ($this->currentUser === null) {
@@ -24,15 +24,16 @@ class UsersController
     {
         // 2. Trava de Segurança: Se não for admin, manda de volta pras campanhas
         if (!$this->currentUser() || !$this->currentUser()->isAdmin()) {
+            FlashMessage::danger('Você não pode acessar esta página!');
             $this->redirectTo('/campaigns');
         }
 
-        // 3. Se passou da trava, busca os usuários e define o título da página
         $users = User::all();
+        $userModel = new User();
+        $totalUsers = $userModel->getTotalUsers();
         $title = 'Gerenciar Usuários';
 
-        // 4. Renderiza a view passando os dados
-        $this->render('index', compact('users', 'title'));
+        $this->render('index', compact('users', 'title', 'totalUsers'));
     }
 
     /**
@@ -44,7 +45,6 @@ class UsersController
     {
         extract($data);
 
-        // ATENÇÃO: Aqui ajustamos o caminho de 'campaign' para 'user'
         $view = '/var/www/app/views/user/' . $view . '.phtml';
         require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
     }

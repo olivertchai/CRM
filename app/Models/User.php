@@ -21,7 +21,8 @@ class User
         private string|null $email = null,
         private string|null $password = null,
         private string|null $password_confirmation = null,
-        private string $role = 'manager_marketing'
+        private string $role = 'manager_marketing',
+        private bool $active = true
     ) {
     }
 
@@ -43,6 +44,11 @@ class User
     public function getRole(): string
     {
         return $this->role;
+    }
+
+    public function active(): bool
+    {
+        return $this->active;
     }
 
     public function setId(int $id): void
@@ -74,6 +80,15 @@ class User
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    public function getTotalUsers(): int
+    {
+        $pdo = Database::getDatabaseConn();
+        $resp = $pdo->query('SELECT COUNT(*) as total FROM users');
+        $row = $resp->fetch();
+
+        return $row ? (int) $row['total'] : 0;
     }
 
     public function destroy(): bool
