@@ -13,7 +13,8 @@ class UsersPopulate
             email: 'fulano@example.com',
             password: '123456',
             password_confirmation: '123456',
-            role: 'manager_marketing'
+            role: 'manager_marketing',
+            active: true
         );
 
         $user->save();
@@ -24,7 +25,8 @@ class UsersPopulate
             email: 'admin@teste.com',
             password: '123456',
             password_confirmation: '123456',
-            role: 'admin'
+            role: 'admin',
+            active: true
         );
         $admin->save();
 
@@ -34,7 +36,8 @@ class UsersPopulate
             email: 'marketing@teste.com',
             password: '123456',
             password_confirmation: '123456',
-            role: 'manager_marketing'
+            role: 'manager_marketing',
+            active: true
         );
         $manager->save();
 
@@ -45,7 +48,9 @@ class UsersPopulate
                 name: 'Fulano ' . $i,
                 email: 'fulano ' . $i . '@example.com',
                 password: '123456',
-                password_confirmation: '123456'
+                password_confirmation: '123456',
+                role: 'manager_marketing',
+                active: true
             );
 
             $user->save();

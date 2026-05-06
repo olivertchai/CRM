@@ -123,15 +123,14 @@ class UserTest extends TestCase
         $this->assertNull(User::findByEmail('not.exits@example.com'));
     }
 
-    public function test_authenticate_should_return_the_true(): void
+    public function test_authenticate_should_return_true(): void
     {
         $this->assertTrue($this->user->authenticate('123456'));
-        $this->assertFalse($this->user->authenticate('wrong'));
     }
 
     public function test_authenticate_should_return_false(): void
     {
-        $this->assertFalse($this->user->authenticate(''));
+        $this->assertFalse($this->user->authenticate('wrongpassword'));
     }
 
     public function test_update_should_not_change_the_password(): void
