@@ -40,7 +40,6 @@ services:
 
   selenium:
     image: selenium/standalone-chrome-debug:latest
-    container_name: selenium
     ports:
       - 4444:4444
       - 5900:5900
@@ -63,10 +62,10 @@ services:
     environment:
       APP_ENV: testing
       DB_HOST: db
-      DB_PORT: 3306
-      DB_DATABASE: problem_test
-      DB_USERNAME: root
-      DB_PASSWORD: ""
+      DB_PORT: 5432
+      DB_DATABASE: campaign_test
+      DB_USERNAME: campaign-user
+      DB_PASSWORD: campaign-pwd
       
   composer:
     image: composer:2.7.2
