@@ -25,7 +25,7 @@ class PaginatorTest extends TestCase
         // $user->save();
 
         for ($i = 0; $i < 10; $i++) {
-            $campaign = new Campaign(title : "Campaign $i");
+            $campaign = new Campaign(['title' => "Campaign $i"]);
             $campaign->save();
             $this->campaigns[] = $campaign;
         }
@@ -44,7 +44,7 @@ class PaginatorTest extends TestCase
 
     public function test_total_of_pages_when_the_division_is_not_exact(): void
     {
-        $campaign = new Campaign(title : "Campaign 11");
+        $campaign = new Campaign(['title' => "Campaign 11"]);
         $campaign->save();
         $this->paginator = new Paginator(Campaign::class, 1, 5, 'campaigns', ['title']);
 

@@ -14,22 +14,22 @@ class UserTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = new User(
-            name: 'User 1',
-            email: 'fulano@example.com',
-            password: '123456',
-            password_confirmation: '123456',
-            role: 'manager_marketing'
-        );
+        $this->user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+            'role' => 'manager_marketing'
+        ]);
         $this->user->save();
 
-        $this->user2 = new User(
-            name: 'User 2',
-            email: 'fulano1@example.com',
-            password: '123456',
-            password_confirmation: '123456',
-            role: 'admin'
-        );
+        $this->user2 = new User([
+            'name' => 'User 2',
+            'email' => 'fulano1@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+            'role' => 'admin'
+        ]);
         $this->user2->save();
     }
 
@@ -42,10 +42,10 @@ class UserTest extends TestCase
     {
         $this->user2->save();
 
-        $users[] = $this->user->getId();
-        $users[] = $this->user2->getId();
+        $users[] = $this->user->id;
+        $users[] = $this->user2->id;
 
-        $all = array_map(fn($user) => $user->getId(), User::all());
+        $all = array_map(fn($user) => $user->id, User::all());
 
         $this->assertCount(2, $all);
         $this->assertEquals($users, $all);
@@ -59,20 +59,20 @@ class UserTest extends TestCase
 
     public function test_set_id(): void
     {
-        $this->user->setId(10);
-        $this->assertEquals(10, $this->user->getId());
+        $this->user->id = 10;
+        $this->assertEquals(10, $this->user->id);
     }
 
     public function test_set_name(): void
     {
-        $this->user->setName('User name');
-        $this->assertEquals('User name', $this->user->getName());
+        $this->user->name = 'User name';
+        $this->assertEquals('User name', $this->user->name);
     }
 
     public function test_set_email(): void
     {
-        $this->user->setEmail('outro@example.com');
-        $this->assertEquals('outro@example.com', $this->user->getEmail());
+        $this->user->email = 'outro@example.com';
+        $this->assertEquals('outro@example.com', $this->user->email);
     }
 
     public function test_errors_should_return_errors(): void
@@ -89,13 +89,13 @@ class UserTest extends TestCase
 
     public function test_errors_should_return_password_confirmation_error(): void
     {
-        $user = new User(
-            name: 'User 3',
-            email: 'fulano3@example.com',
-            password: '123456',
-            password_confirmation: '1234567',
-            role: 'manager_marketing'
-        );
+        $user = new User([
+            'name' => 'User 3',
+            'email' => 'fulano3@example.com',
+            'password' => '123456',
+            'password_confirmation' => '1234567',
+            'role' => 'manager_marketing'
+        ]);
 
         $this->assertFalse($user->isValid());
         $this->assertFalse($user->save());
@@ -105,7 +105,7 @@ class UserTest extends TestCase
 
     public function test_find_by_id_should_return_the_user(): void
     {
-        $this->assertEquals($this->user->getId(), User::findById($this->user->getId())->getId());
+        $this->assertEquals($this->user->id, User::findById($this->user->id)->id);
     }
 
     public function test_find_by_id_should_return_null(): void
@@ -115,7 +115,7 @@ class UserTest extends TestCase
 
     public function test_find_by_email_should_return_the_user(): void
     {
-        $this->assertEquals($this->user->getId(), User::findByEmail($this->user->getEmail())->getId());
+        $this->assertEquals($this->user->id, User::findByEmail($this->user->email)->id);
     }
 
     public function test_find_by_email_should_return_null(): void
@@ -135,7 +135,7 @@ class UserTest extends TestCase
 
     public function test_update_should_not_change_the_password(): void
     {
-        $this->user->setPassword('654321');
+        $this->user->password = '654321';
         $this->user->save();
 
         $this->assertTrue($this->user->authenticate('123456'));
@@ -144,17 +144,17 @@ class UserTest extends TestCase
 
     public function test_verifica_se_a_logica_de_admin_funciona_corretamente(): void
     {
-        $usuarioAdmin = new User(
-            name: 'Chefe',
-            email: 'admin@teste.com',
-            role: 'admin'
-        );
+        $usuarioAdmin = new User([
+            'name' => 'Chefe',
+            'email' => 'admin@teste.com',
+            'role' => 'admin'
+        ]);
 
-        $usuarioMarketing = new User(
-            name: 'Gerente',
-            email: 'marketing@teste.com',
-            role: 'manager_marketing'
-        );
+        $usuarioMarketing = new User([
+            'name' => 'Gerente',
+            'email' => 'marketing@teste.com',
+            'role' => 'manager_marketing'
+        ]);
 
         $this->assertTrue($usuarioAdmin->isAdmin(), 'O usuário com cargo admin deve retornar true no isAdmin().');
         $this->assertFalse(

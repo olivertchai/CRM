@@ -10,8 +10,8 @@ class CampaignsControllerTest extends ControllerTestCase
 {
     public function test_list_all_campaigns(): void
     {
-        $campaigns[] = new Campaign(title: 'Campaign 1');
-        $campaigns[] = new Campaign(title: 'Campaign 2');
+        $campaigns[] = new Campaign(['title' => 'Campaign 1']);
+        $campaigns[] = new Campaign(['title' => 'Campaign 2']);
 
         foreach ($campaigns as $campaign) {
             $campaign->save();
@@ -20,7 +20,7 @@ class CampaignsControllerTest extends ControllerTestCase
         $response = $this->get(action: 'index', controller: 'App\Controllers\CampaignsController');
 
         foreach ($campaigns as $campaign) {
-            $this->assertMatchesRegularExpression("/{$campaign->getTitle()}/", $response);
+            $this->assertMatchesRegularExpression("/{$campaign->title}/", $response);
         }
     }
 }

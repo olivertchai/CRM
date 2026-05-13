@@ -5,6 +5,7 @@ namespace Lib;
 use Core\Constants\Constants;
 use Core\Database\Database;
 use PDO;
+use PDOStatement;
 
 class Paginator
 {
@@ -20,6 +21,8 @@ class Paginator
         private int $per_page,
         private string $table,
         private array $attributes,
+        private array $conditions = [],
+        private ?string $route = null
     ) {
         $this->loadTotals();
         $this->loadRegisters();
@@ -101,9 +104,13 @@ class Paginator
     private function loadTotals(): void
     {
         $pdo = Database::getDatabaseConn();
-        $sql = "SELECT COUNT(*) FROM {$this->table}";
+        $sql = "SELECT COUNT(*) FROM {$this->table}" . $this->buildConditions();
 
-        $this->totalOfRegisters = $pdo->query($sql)->fetchColumn();
+        $stmt = $pdo->prepare($sql);
+        $this->bindConditions($stmt);
+        $stmt->execute();
+
+        $this->totalOfRegisters = $stmt->fetchColumn();
         $this->totalOfPages = ceil($this->totalOfRegisters / $this->per_page);
     }
 
@@ -116,7 +123,7 @@ class Paginator
 
         $sql = <<<SQL
             SELECT id, {$attributes} FROM {$this->table}
-            ORDER BY id DESC
+            {$this->buildConditions()}
             LIMIT :limit OFFSET :offset
         SQL;
 
@@ -126,12 +133,38 @@ class Paginator
         $stmt->bindValue('limit', $this->per_page, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $this->offset, PDO::PARAM_INT);
 
+        $this->bindConditions($stmt);
+
         $stmt->execute();
         $resp = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->totalOfRegistersOfPage = $stmt->rowCount();
 
         foreach ($resp as $row) {
-            $this->registers[] = $this->class::fromArray($row);
+            $this->registers[] = new $this->class($row);
+        }
+    }
+
+    private function buildConditions(): string
+    {
+        if (empty($this->conditions)) {
+            return '';
+        }
+
+        $sqlConditions = array_map(function ($column) {
+            return "{$column} = :{$column}";
+        }, array_keys($this->conditions));
+
+        return ' WHERE ' . implode(' AND ', $sqlConditions);
+    }
+
+    private function bindConditions(PDOStatement $stmt): void
+    {
+        if (empty($this->conditions)) {
+            return;
+        }
+
+        foreach ($this->conditions as $column => $value) {
+            $stmt->bindValue($column, $value);
         }
     }
 }

@@ -2,240 +2,44 @@
 
 namespace App\Models;
 
-use DateTime;
-use InvalidArgumentException;
-use Core\Database\Database;
-use Lib\Paginator;
+use Core\Database\ActiveRecord\BelongsTo;
+use Core\Database\ActiveRecord\BelongsToMany;
+use Lib\Validations;
+use Core\Database\ActiveRecord\Model;
 
-class Campaign
+/**
+ * @property int $id
+ * @property string $title
+ * @property string $description
+ * @property \DateTime $start_date
+ * @property \DateTime $end_date
+ * @property string $status
+ * @property int $user_id
+ * @property User $user
+ * @property User[] $reinforced_by_users
+ */
+class Campaign extends Model
 {
-    /**
-     * Summary of errors
-     * @var array<string,string>
-     */
-    private array $errors = [];
+    protected static string $table = 'campaigns';
+    protected static array $columns = ['title', 'description', 'start_date', 'end_date', 'status', 'user_id', 'image_url'];
 
-    private ?int $id;
-    private string $title;
-    private ?string $description;
-    private ?DateTime $startDate;
-    private ?DateTime $endDate;
-    private ?string $imagePath; // Novo atributo para o caminho da imagem
-
-    public function __construct(
-        string $title,
-        ?int $id = null,
-        ?string $description = null,
-        ?DateTime $startDate = null,
-        ?DateTime $endDate = null,
-        ?string $imagePath = null
-    ) {
-        $this->title = $title;
-        $this->id = $id;
-        $this->description = $description;
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
-        $this->imagePath = $imagePath;
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function getId(): int
+    public function reinforcedByUsers(): BelongsToMany
     {
-        return $this->id;
-    }
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-    public function getStartDate(): ?DateTime
-    {
-        return $this->startDate;
-    }
-    public function getEndDate(): ?DateTime
-    {
-        return $this->endDate;
-    }
-    public function getImagePath(): ?string
-    {
-        return $this->imagePath;
+        return $this->belongsToMany(User::class, 'campaign_user_reinforce', 'campaign_id', 'user_id');
     }
 
-    public function setTitle(string $title): void
+    public function validates(): void
     {
-        $this->title = $title;
-    }
-    public function setDescription(?string $description): void
-    {
-        $this->description = $description;
-    }
-    public function setStartDate(?DateTime $startDate): void
-    {
-        $this->startDate = $startDate;
-    }
-    public function setEndDate(?DateTime $endDate): void
-    {
-        $this->endDate = $endDate;
-    }
-    public function setImagePath(?string $imagePath): void
-    {
-        $this->imagePath = $imagePath;
+        Validations::notEmpty('title', $this);
     }
 
-    // Validação básica: data final não pode ser antes da inicial
-    public function validateDateInitialEnd(): void
+    public function isSupportedByUser(User $user): bool
     {
-        if ($this->endDate < $this->startDate) {
-            throw new InvalidArgumentException("A data final não pode ser antes da data inicial.");
-        }
-    }
-
-    // Método para formatar a saída (ex: d/m/Y)
-    public function getIntervalFormated(string $format = 'd/m/Y'): string
-    {
-        if (!$this->startDate || !$this->endDate) {
-            return 'Período não definido';
-        }
-
-        return $this->startDate->format($format) . ' até ' . $this->endDate->format($format);
-    }
-
-    public function destroy(): bool
-    {
-        $pdo = Database::getDatabaseConn();
-
-        $sql = 'DELETE FROM campaigns WHERE id = :id';
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':id', $this->id);
-
-        $stmt->execute();
-
-        return ($stmt->rowCount() !== 0);
-    }
-
-    public function save(): bool
-    {
-        if ($this->isValid()) {
-            $pdo = Database::getDatabaseConn();
-            if ($this->newRecord()) {
-                $sql = "INSERT INTO campaigns (title) VALUES (:title);";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindParam(':title', $this->title);
-
-                $stmt->execute();
-
-                $this->id = (int) $pdo->lastInsertId();
-            } else {
-                $sql = "UPDATE campaigns SET title = :title WHERE id = :id;";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindParam(':title', $this->title);
-                $stmt->bindParam(':id', $this->id);
-
-                $stmt->execute();
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public function newRecord(): bool
-    {
-        return $this->id === null;
-    }
-
-    public function isValid(): bool
-    {
-        $this->errors = []; // Limpa erros anteriores
-
-        if (empty($this->title)) {
-            $this->errors[] = 'O título da campanha é obrigatório.';
-        }
-        return empty($this->errors);
-    }
-
-    public function hasErrors(): bool
-    {
-        return !empty($this->errors);
-    }
-
-    public function getErrorsIndex(string $index): string | null
-    {
-        return $this->errors[$index] ?? null;
-    }
-
-    /**
-     * Summary of all
-     * @return Campaign[]
-     */
-    public static function all(): array
-    {
-        $campaigns = [];
-
-        $pdo = Database::getDatabaseConn();
-        $resp = $pdo->query('SELECT id, title FROM campaigns');
-
-        foreach ($resp as $row) {
-            $campaigns[] = new Campaign(id: $row['id'], title: $row['title']);
-        }
-
-        return $campaigns;
-    }
-
-    public static function findById(int $id): ?Campaign
-    {
-        $pdo = Database::getDatabaseConn();
-
-        $sql = 'SELECT id, title FROM campaigns WHERE id = :id';
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':id', $id);
-
-        $stmt->execute();
-
-        if ($stmt->rowCount() == 0) {
-            return null;
-        }
-
-        $row = $stmt->fetch();
-
-        return new Campaign(id: $row['id'], title: $row['title']);
-    }
-
-    public static function paginate(int $page = 1, int $per_page = 10): Paginator
-    {
-        return new Paginator(
-            class: Campaign::class,
-            page: $page,
-            per_page: $per_page,
-            table: 'campaigns',
-            attributes: ['title']
-        );
-    }
-
-    /**
-     * @param array{
-     *   id?: int|null,
-     *   title: string,
-     *   description?: string|null,
-     *   start_date?: string|null,
-     *   end_date?: string|null,
-     *   image_path?: string|null
-     * } $data
-     */
-    public static function fromArray(array $data): self
-    {
-        // Aqui nós convertemos as strings de data que vêm do banco em objetos DateTime
-        $startDate = !empty($data['start_date']) ? new \DateTime($data['start_date']) : null;
-        $endDate   = !empty($data['end_date'])   ? new \DateTime($data['end_date'])   : null;
-
-        return new self(
-            title: $data['title'],
-            id: $data['id'] ?? null,
-            description: $data['description'] ?? null,
-            startDate: $startDate,
-            endDate: $endDate,
-            imagePath: $data['image_path'] ?? null
-        );
+        return CampaignUserReinforce::exists(['campaign_id' => $this->id, 'user_id' => $user->id]);
     }
 }

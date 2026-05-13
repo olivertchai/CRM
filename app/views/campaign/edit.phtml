@@ -18,7 +18,7 @@
 
         <div class="flex flex-col">
           <h1 class="text-3xl font-bold tracking-tight">
-            <?= $campaign->getTitle() ?>
+            <?= $campaign->title() ?>
           </h1>
           <p class="text-slate-500 dark:text-slate-400 text-sm">
             Crie e configure uma nova campanha de marketing
@@ -40,9 +40,9 @@
         </p>
       </div>
 
-      <form action="<?= route('campaigns.update', ['id' =>$campaign->getId()]) ?>" method="POST" class="flex flex-col gap-6">
+      <form action="<?= route('campaigns.update', ['id' =>$campaign->id]) ?>" method="POST" class="flex flex-col gap-6">
           <input type="hidden" name="_method" value="PUT">
-          <input type="hidden" name="id" value="<?= $campaign->getId() ?>">
+          <input type="hidden" name="id" value="<?= $campaign->id ?>">
 
         <!-- Row 1 -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -56,7 +56,7 @@
               placeholder="Ex: Campanha de Verão 2024"
               type="text"
               name="campaign[title]"
-              value="<?= $campaign->getTitle() ?>"
+              value="<?= $campaign->title() ?>"
               required
             />
 
@@ -78,6 +78,8 @@
               class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm"
               placeholder="https://exemplo.com/imagem.jpg"
               type="text"
+              name="campaign[image_url]"
+              value="<?= $campaign->image_url() ?>"
             />
           </label>
         </div>
@@ -92,7 +94,8 @@
             class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 w-full text-sm resize-none"
             placeholder="Descreva os objetivos e detalhes da campanha..."
             rows="4"
-          ></textarea>
+            name="campaign[description]"
+          ><?= $campaign->description() ?></textarea>
         </label>
 
         <!-- Dates -->
@@ -105,6 +108,8 @@
             <input
               class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm"
               type="datetime-local"
+              name="campaign[start_date]"
+              value="<?= $campaign->start_date() ?>"
             />
           </label>
 
@@ -115,6 +120,8 @@
             >
             <input
               class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm"
+              name="campaign[end_date]"
+              value="<?= $campaign->end_date() ?>"
               type="datetime-local"
             />
           </label>
@@ -130,6 +137,7 @@
           <div class="flex gap-3">
             <select
               class="flex-1 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 text-sm"
+              name="campaign[lead_profile_id]"
             >
               <option disabled selected value="">
                 Selecione um perfil
