@@ -3,26 +3,15 @@
 namespace App\Controllers;
 
 use App\Models\Campaign;
+use Core\Http\Controllers\Controller;
 use App\Models\User;
 use Core\Http\Request;
-use DateTime;
 use Lib\Authentication\Auth;
 use Lib\FlashMessage;
-use App\Middleware\Authenticate;
 
-class CampaignsController
+class CampaignsController extends Controller
 {
-    private string $layout = 'application';
-    private ?User $currentUser = null;
-
-    public function currentUser(): ?User
-    {
-        if ($this->currentUser === null) {
-            $this->currentUser = Auth::user();
-        }
-
-        return $this->currentUser;
-    }
+    protected string $layout = 'application';
 
     public function index(Request $request): void
     {
@@ -31,9 +20,9 @@ class CampaignsController
 
         $title = 'Campanhas';
         if ($request->acceptJson()) {
-            $this->renderJson('index', compact('paginator', 'campaigns', 'title'));
+            $this->renderJson('campaign/index', compact('paginator', 'campaigns', 'title'));
         } else {
-            $this->render('index', compact('paginator', 'campaigns', 'title'));
+            $this->render('campaign/index', compact('paginator', 'campaigns', 'title'));
         }
     }
 
@@ -44,14 +33,14 @@ class CampaignsController
         $campaign = Campaign::findById($params['id']);
 
         $title = 'Detalhes da Campanha';
-        $this->render('show', compact('campaign', 'title'));
+        $this->render('campaign/show', compact('campaign', 'title'));
     }
 
     public function new(): void
     {
         $campaign = new Campaign(id: null, title: '');
         $title = 'Criar Nova Campanha';
-        $this->render('new', compact('campaign', 'title'));
+        $this->render('campaign/new', compact('campaign', 'title'));
     }
 
     public function create(Request $request): void
@@ -69,7 +58,7 @@ class CampaignsController
             FlashMessage::danger('Existe dados incorretor, por favor verifique!');
             // Recarrega o formulário com os erros
             $title = 'Criar Nova Campanha';
-            $this->render('new', compact('campaign', 'title'));
+            $this->render('campaign/new', compact('campaign', 'title'));
         }
     }
 
@@ -84,7 +73,7 @@ class CampaignsController
         }
 
         $title = 'Editar Campanha';
-        $this->render('edit', compact('campaign', 'title'));
+        $this->render('campaign/edit', compact('campaign', 'title'));
     }
 
     public function update(Request $request): void
@@ -102,7 +91,7 @@ class CampaignsController
             // Recarrega o formulário
             //$title = $campaign['title'];
             $title = 'Editar Campanha';
-            $this->render('edit', compact('campaign', 'title'));
+            $this->render('campaign/edit', compact('campaign', 'title'));
         }
     }
 
@@ -116,42 +105,5 @@ class CampaignsController
         }
         FlashMessage::success('Campanha removida com sucesso!');
         $this->redirectTo(route('campaigns.index'));
-    }
-
-    /**
-     * @param string $view
-     * @param array<string, mixed> $data
-     * @return void
-     */
-    private function render(string $view, array $data = []): void
-    {
-        extract($data);
-
-        $view = '/var/www/app/views/campaign/' . $view . '.phtml';
-        require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
-    }
-
-    private function redirectTo(string $location): void
-    {
-        header('Location: ' . $location);
-        exit;
-    }
-
-    /**
-     * Summary of renderJson
-     * @param string $view
-     * @param array<string, mixed> $data
-     * @return void
-     */
-    private function renderJson(string $view, array $data = []): void
-    {
-        extract($data);
-
-        $view = '/var/www/app/views/campaign/' . $view . '.phtml';
-        $json = [];
-
-        header('Content-Type: application/json, charset=utf-8');
-        require $view;
-        echo json_encode($json);
     }
 }
