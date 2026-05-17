@@ -86,6 +86,10 @@ abstract class Model
         throw new \Exception("Property {$property} not found in " . static::class);
     }
 
+    /**
+     * @param string|null $attribute
+     * @return array<string, mixed>
+     */
     public function getErrorsIndex(?string $attribute = null)
     {
         // Se a View pedir o erro de um campo específico (ex: getErrorsIndex('title'))
@@ -292,6 +296,9 @@ abstract class Model
         return $models;
     }
 
+    /**
+     * @param array<string, mixed> $conditions
+     */
     public static function paginate(int $page = 1, int $per_page = 10, ?string $route = null, array $conditions = []): Paginator
     {
         return new Paginator(

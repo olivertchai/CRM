@@ -12,20 +12,23 @@ class PaginatorTest extends TestCase
     private Paginator $paginator;
     /** @var mixed[] $campaigns */
     private array $campaigns;
+    private User $user;
 
     public function setUp(): void
     {
-        // parent::setUp();
-        // $user = new User([
-        //     'name' => 'User 1',
-        //     'email' => 'fulano@example.com',
-        //     'password' => '123456',
-        //     'password_confirmation' => '123456'
-        // ]);
-        // $user->save();
+        parent::setUp();
+        $this->user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+            'role' => 'manager_marketing',
+            'active' => true
+        ]);
+        $this->user->save();
 
         for ($i = 0; $i < 10; $i++) {
-            $campaign = new Campaign(['title' => "Campaign $i"]);
+            $campaign = new Campaign(['title' => "Campaign $i", "user_id" => $this->user->id]);
             $campaign->save();
             $this->campaigns[] = $campaign;
         }
@@ -39,12 +42,12 @@ class PaginatorTest extends TestCase
 
     public function test_total_of_pages(): void
     {
-        $this->assertEquals(1, $this->paginator->totalOfPages());
+        $this->assertEquals(2, $this->paginator->totalOfPages());
     }
 
     public function test_total_of_pages_when_the_division_is_not_exact(): void
     {
-        $campaign = new Campaign(['title' => "Campaign 11"]);
+        $campaign = new Campaign(['title' => "Campaign 11", "user_id" => $this->user->id]);
         $campaign->save();
         $this->paginator = new Paginator(Campaign::class, 1, 5, 'campaigns', ['title']);
 

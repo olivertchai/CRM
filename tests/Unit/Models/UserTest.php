@@ -19,7 +19,8 @@ class UserTest extends TestCase
             'email' => 'fulano@example.com',
             'password' => '123456',
             'password_confirmation' => '123456',
-            'role' => 'manager_marketing'
+            'role' => 'manager_marketing',
+            'active' => true
         ]);
         $this->user->save();
 
@@ -28,7 +29,8 @@ class UserTest extends TestCase
             'email' => 'fulano1@example.com',
             'password' => '123456',
             'password_confirmation' => '123456',
-            'role' => 'admin'
+            'role' => 'admin',
+            'active' => true
         ]);
         $this->user2->save();
     }

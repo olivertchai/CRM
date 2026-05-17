@@ -18,7 +18,9 @@ class AuthTest extends TestCase
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
+            'role' => 'manager_marketing',
+            'active' => true
         ]);
         $this->user->save();
     }

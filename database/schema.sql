@@ -1,5 +1,6 @@
-DROP TABLE IF EXISTS campaigns;
+SET session_replication_role = replica;
 
+DROP TABLE IF EXISTS campaigns;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -13,7 +14,7 @@ CREATE TABLE users (
 
 CREATE TABLE campaigns (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id),
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     title VARCHAR(100) NOT NULL,
     description TEXT,
     start_date DATE,
@@ -21,3 +22,5 @@ CREATE TABLE campaigns (
     status VARCHAR(50),
     image_url VARCHAR(255)
 );
+
+SET session_replication_role = DEFAULT;

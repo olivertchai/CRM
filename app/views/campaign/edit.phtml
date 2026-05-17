@@ -18,7 +18,7 @@
 
         <div class="flex flex-col">
           <h1 class="text-3xl font-bold tracking-tight">
-            <?= $campaign->title() ?>
+            <?= $campaign->title ?>
           </h1>
           <p class="text-slate-500 dark:text-slate-400 text-sm">
             Crie e configure uma nova campanha de marketing
@@ -56,7 +56,7 @@
               placeholder="Ex: Campanha de Verão 2024"
               type="text"
               name="campaign[title]"
-              value="<?= $campaign->title() ?>"
+              value="<?= $campaign->title ?>"
               required
             />
 
@@ -79,7 +79,7 @@
               placeholder="https://exemplo.com/imagem.jpg"
               type="text"
               name="campaign[image_url]"
-              value="<?= $campaign->image_url() ?>"
+              value="<?= $campaign->image_url ?>"
             />
           </label>
         </div>
@@ -95,7 +95,7 @@
             placeholder="Descreva os objetivos e detalhes da campanha..."
             rows="4"
             name="campaign[description]"
-          ><?= $campaign->description() ?></textarea>
+          ><?= $campaign->description ?></textarea>
         </label>
 
         <!-- Dates -->
@@ -109,7 +109,7 @@
               class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm"
               type="datetime-local"
               name="campaign[start_date]"
-              value="<?= $campaign->start_date() ?>"
+              value="<?= $campaign->start_date ?>"
             />
           </label>
 
@@ -121,7 +121,7 @@
             <input
               class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm"
               name="campaign[end_date]"
-              value="<?= $campaign->end_date() ?>"
+              value="<?= $campaign->end_date ?>"
               type="datetime-local"
             />
           </label>

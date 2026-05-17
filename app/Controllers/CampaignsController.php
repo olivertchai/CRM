@@ -70,10 +70,10 @@ class CampaignsController extends Controller
         }
 
         $title = "Editar Campanha #{$campaign->id}";
-        $this->render('campaigns/edit', compact('campaign', 'title'));
+        $this->render('campaign/edit', compact('campaign', 'title'));
     }
 
-        public function update(Request $request): void
+    public function update(Request $request): void
     {
         $id = $request->getParam('id');
         $params = $request->getParam('campaign');

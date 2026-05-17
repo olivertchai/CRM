@@ -21,7 +21,16 @@ use Core\Database\ActiveRecord\Model;
 class Campaign extends Model
 {
     protected static string $table = 'campaigns';
-    protected static array $columns = ['title', 'description', 'start_date', 'end_date', 'status', 'user_id', 'image_url'];
+    protected static array $columns =
+    [
+        'title',
+        'description',
+        'start_date',
+        'end_date',
+        'status',
+        'user_id',
+        'image_url'
+    ];
 
     public function user(): BelongsTo
     {

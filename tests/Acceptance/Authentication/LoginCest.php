@@ -14,8 +14,11 @@ class LoginCest extends BaseAcceptanceCest
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
+            'role' => 'manager_marketing',
+            'active' => true,
         ]);
+
         $user->save();
 
         $page->amOnPage('/login');
@@ -26,7 +29,7 @@ class LoginCest extends BaseAcceptanceCest
         $page->click('Entrar');
 
         $page->see('Login realizado com sucesso!');
-        $page->seeInCurrentUrl('/problems');
+        $page->seeInCurrentUrl('/campaigns');
     }
 
     public function loginUnsuccessfully(AcceptanceTester $page): void
