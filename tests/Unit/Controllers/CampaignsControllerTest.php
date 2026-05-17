@@ -38,10 +38,10 @@ class CampaignsControllerTest extends ControllerTestCase
         }
     }
 
-public function test_authenticated_routes_should_not_be_accessible_by_unauthenticated_users(): void
+    public function test_authenticated_routes_should_not_be_accessible_by_unauthenticated_users(): void
     {
         // Garante que a sessão do usuário está vazia (ninguém logado)
-        unset($_SESSION['user']); 
+        unset($_SESSION['user']);
 
         // O controller que vamos testar
         $controller = CampaignsController::class;
@@ -67,8 +67,8 @@ public function test_authenticated_routes_should_not_be_accessible_by_unauthenti
             // Verifica se o controller cuspiu o redirecionamento (provavelmente para /login ou /)
             // Se o seu sistema redireciona para a home ('/'), mude '/login' para '/'
             $this->assertStringContainsString(
-                'Location: /login', 
-                $output, 
+                'Location: /login',
+                $output,
                 "A action '{$action}' falhou em bloquear o acesso de visitante."
             );
         }

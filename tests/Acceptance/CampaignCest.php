@@ -4,10 +4,16 @@ namespace Tests\Acceptance;
 
 use Tests\Support\AcceptanceTester;
 // Importe o seu model de Usuário (ajuste o namespace se for diferente, ex: App\Models\User)
-use App\Models\User; 
+use App\Models\User;
 
 class CampaignCest
 {
+    /**
+     * Summary of _before
+     * @param AcceptanceTester $I
+     * @return void
+     */
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     public function _before(AcceptanceTester $I): void
     {
         // 1. Limpa ou garante que o usuário de teste exista no banco
@@ -38,9 +44,9 @@ class CampaignCest
     {
         // O robô agora deve conseguir entrar aqui sem ser redirecionado!
         $I->amOnPage('/campaigns/new');
-        
+
         $I->click('Salvar Campanha');
-        
+
         $I->see('Existem dados incorretos! Por verifique!');
         $I->seeCurrentUrlEquals('/campaigns/new');
     }

@@ -45,13 +45,13 @@ class CampaignTest extends TestCase
     {
         // 1. Instanciamos uma campanha vazia (sem título, datas, etc.)
         $campaign = new Campaign([]);
-        
+
         // 2. Tentamos salvar (deve retornar false porque as validações vão barrar)
         $this->assertFalse($campaign->save());
-        
+
         // 3. Pegamos os erros gerados pela sua Model
         $errors = $campaign->getErrorsIndex();
-        
+
         // 4. Garantimos que o sistema acusou erro nos campos obrigatórios
         $this->assertArrayHasKey('title', $errors);
         $this->assertArrayHasKey('start_date', $errors);
