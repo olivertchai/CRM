@@ -1,0 +1,10 @@
+actor: AcceptanceTester
+modules:
+  enabled:
+    - WebDriver:
+        url: http://web
+        host: selenium
+        port: 4444
+        browser: chrome
+        path: /wd/hub
+    - \Tests\Support\Helper\LoginHelper

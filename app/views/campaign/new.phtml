@@ -44,26 +44,24 @@
         <!-- Row 1 -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <label class="flex flex-col gap-2">
-            <span
-              class="text-sm font-semibold text-slate-700 dark:text-slate-200"
-              >Título</span
-            >
+            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+              Título
+            </span>
+            <?php $titleErrors = $campaign->getErrorsIndex('title'); ?>
             <input
-              class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm <?= empty($errors) ? '' : 'rounded-xl border-red-500 dark:border-red-500 bg-white dark:bg-slate-800 focus:ring-red-500 focus:border-red-500 px-4 py-3 h-12 w-full text-sm outline-none transition-colors' ?>"
+              class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm outline-none transition-colors <?= !empty($titleErrors) ? 'border-red-500 dark:border-red-500 focus:ring-red-500' : '' ?>"
               placeholder="Ex: Campanha de Verão 2024"
               type="text"
               name="campaign[title]"
-              
+              value="<?= $campaign->title ?? '' ?>"
             />
 
-            <!-- Error Message -->
-            <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= $campaign->hasErrors() ? 'hidden' : '' ?>">
+            <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($titleErrors) ? 'hidden' : '' ?>">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
               </svg>
-              <?= $campaign->getErrorsIndex('title')? $campaign->getErrorsIndex('title') : '' ?>
+              <?= !empty($titleErrors) ? (is_array($titleErrors) ? $titleErrors[0] : $titleErrors) : '' ?>
             </span>
-
           </label>
 
           <label class="flex flex-col gap-2">
@@ -82,45 +80,65 @@
 
         <!-- Description -->
         <label class="flex flex-col gap-2">
-          <span
-            class="text-sm font-semibold text-slate-700 dark:text-slate-200"
-            >Descrição</span
-          >
+          <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            Descrição
+          </span>
+          <?php $descErrors = $campaign->getErrorsIndex('description'); ?>
           <textarea
-            class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 w-full text-sm resize-none"
+            class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 w-full text-sm resize-none outline-none transition-colors <?= !empty($descErrors) ? 'border-red-500 dark:border-red-500 focus:ring-red-500' : '' ?>"
             placeholder="Descreva os objetivos e detalhes da campanha..."
             rows="4"
             name="campaign[description]"
-            
-          ></textarea>
+          ><?= $campaign->description ?? '' ?></textarea>
+
+           <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($descErrors) ? 'hidden' : '' ?>">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+              <?= !empty($descErrors) ? (is_array($descErrors) ? $descErrors[0] : $descErrors) : '' ?>
+            </span>
         </label>
 
         <!-- Dates -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <label class="flex flex-col gap-2">
-            <span
-              class="text-sm font-semibold text-slate-700 dark:text-slate-200"
-              >Data de Início</span
-            >
+            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+              Data de Início
+            </span>
+            <?php $startDateErrors = $campaign->getErrorsIndex('start_date'); ?>
             <input
-              class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm"
+              class="rounded-xl bg-white dark:bg-slate-800 px-4 py-3 h-12 w-full text-sm outline-none transition-colors <?= !empty($startDateErrors) ? 'border-2 border-red-500 dark:border-red-500 focus:ring-red-500 focus:border-red-500' : 'border border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary' ?>"
               type="datetime-local"
               name="campaign[start_date]"
-              
+              value="<?= $campaign->start_date ?? '' ?>"
             />
+            
+            <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($startDateErrors) ? 'hidden' : '' ?>">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+              <?= !empty($startDateErrors) ? (is_array($startDateErrors) ? $startDateErrors[0] : $startDateErrors) : '' ?>
+            </span>
           </label>
 
           <label class="flex flex-col gap-2">
-            <span
-              class="text-sm font-semibold text-slate-700 dark:text-slate-200"
-              >Data de Término</span
-            >
+            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+              Data de Término
+            </span>
+            <?php $endDateErrors = $campaign->getErrorsIndex('end_date'); ?>
             <input
-              class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm"
+              class="rounded-xl bg-white dark:bg-slate-800 px-4 py-3 h-12 w-full text-sm outline-none transition-colors <?= !empty($endDateErrors) ? 'border-2 border-red-500 dark:border-red-500 focus:ring-red-500 focus:border-red-500' : 'border border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary' ?>"
               type="datetime-local"
               name="campaign[end_date]"
-              
+              value="<?= $campaign->end_date ?? '' ?>"
             />
+
+            <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($endDateErrors) ? 'hidden' : '' ?>">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+              <?= !empty($endDateErrors) ? (is_array($endDateErrors) ? $endDateErrors[0] : $endDateErrors) : '' ?>
+            </span>
           </label>
         </div>
 

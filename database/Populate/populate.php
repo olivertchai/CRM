@@ -8,5 +8,5 @@ use Database\Populate\UsersPopulate;
 
 Database::migrate();
 
-CampaignsPopulate::populate();
 UsersPopulate::populate();
+CampaignsPopulate::populate();
