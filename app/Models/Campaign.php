@@ -45,6 +45,9 @@ class Campaign extends Model
     public function validates(): void
     {
         Validations::notEmpty('title', $this);
+        Validations::notEmpty('description', $this);
+        Validations::notEmpty('start_date', $this);
+        Validations::notEmpty('end_date', $this);
     }
 
     public function isSupportedByUser(User $user): bool

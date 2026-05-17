@@ -40,4 +40,21 @@ class CampaignTest extends TestCase
     {
         $this->assertInstanceOf(Paginator::class, Campaign::paginate());
     }
+
+    public function test_should_not_create_campaign_with_invalid_data(): void
+    {
+        // 1. Instanciamos uma campanha vazia (sem título, datas, etc.)
+        $campaign = new Campaign([]);
+        
+        // 2. Tentamos salvar (deve retornar false porque as validações vão barrar)
+        $this->assertFalse($campaign->save());
+        
+        // 3. Pegamos os erros gerados pela sua Model
+        $errors = $campaign->getErrorsIndex();
+        
+        // 4. Garantimos que o sistema acusou erro nos campos obrigatórios
+        $this->assertArrayHasKey('title', $errors);
+        $this->assertArrayHasKey('start_date', $errors);
+        $this->assertArrayHasKey('end_date', $errors);
+    }
 }

@@ -56,7 +56,7 @@ class CampaignsController extends Controller
         } else {
             FlashMessage::danger('Existem dados incorretos! Por verifique!');
             $title = 'Nova Campanha';
-            $this->render('campaigns/new', compact('campaign', 'title'));
+            $this->render('campaign/new', compact('campaign', 'title'));
         }
     }
 
@@ -80,6 +80,9 @@ class CampaignsController extends Controller
 
         $campaign = $this->current_user->campaigns()->findById($id);
         $campaign->title = $params['title'];
+        $campaign->description = $params['description'];
+        $campaign->start_date = $params['start_date'];
+        $campaign->end_date = $params['end_date'];
 
         if ($campaign->save()) {
             FlashMessage::success('Campanha atualizada com sucesso!');
@@ -87,7 +90,7 @@ class CampaignsController extends Controller
         } else {
             FlashMessage::danger('Existem dados incorretos! Por verifique!');
             $title = "Editar Campanha #{$campaign->id}";
-            $this->render('campaigns/edit', compact('campaign', 'title'));
+            $this->render('campaign/edit', compact('campaign', 'title'));
         }
     }
 

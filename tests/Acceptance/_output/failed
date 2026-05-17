@@ -1,0 +1,1 @@
+tests/Acceptance/CampaignCest.php:tryToCreateCampaignWithInvalidData
