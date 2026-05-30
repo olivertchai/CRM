@@ -81,7 +81,26 @@
             />
           </label>
         </div>
+<label class="flex flex-col gap-2">
+  <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+    Subtítulo
+  </span>
+  <?php $subtitleErrors = $campaign->getErrorsIndex('subtitle'); ?>
+  <input
+    class="rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3 h-12 w-full text-sm outline-none transition-colors <?= !empty($subtitleErrors) ? 'border-red-500 dark:border-red-500 focus:ring-red-500' : '' ?>"
+    placeholder="Ex: Uma breve descrição complementar para a linha fina"
+    type="text"
+    name="campaign[subtitle]"
+    value="<?= $campaign->subtitle ?? '' ?>"
+  />
 
+  <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($subtitleErrors) ? 'hidden' : '' ?>">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+    </svg>
+    <?= !empty($subtitleErrors) ? (is_array($subtitleErrors) ? $subtitleErrors[0] : $subtitleErrors) : '' ?>
+  </span>
+</label>
         <!-- Description -->
         <label class="flex flex-col gap-2">
           <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">
@@ -109,13 +128,14 @@
             <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">
               Data de Início
             </span>
+            
             <?php $startDateErrors = $campaign->getErrorsIndex('start_date'); ?>
+            
             <input
               class="rounded-xl bg-white dark:bg-slate-800 px-4 py-3 h-12 w-full text-sm outline-none transition-colors <?= !empty($startDateErrors) ? 'border-2 border-red-500 dark:border-red-500 focus:ring-red-500 focus:border-red-500' : 'border border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary' ?>"
-              type="datetime-local"
+              type="date"
               name="campaign[start_date]"
-              value="<?= $campaign->start_date ?? '' ?>"
-            />
+              value="<?= is_string($campaign->start_date) ? $campaign->start_date : ($campaign->start_date?->format('Y-m-d') ?? '') ?>"            />
             
             <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($startDateErrors) ? 'hidden' : '' ?>">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
@@ -125,18 +145,20 @@
             </span>
           </label>
 
-          <label class="flex flex-col gap-2">
+          <label class="flex flex-col gap-2 mt-4">
             <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">
               Data de Término
             </span>
+            
             <?php $endDateErrors = $campaign->getErrorsIndex('end_date'); ?>
+            
             <input
               class="rounded-xl bg-white dark:bg-slate-800 px-4 py-3 h-12 w-full text-sm outline-none transition-colors <?= !empty($endDateErrors) ? 'border-2 border-red-500 dark:border-red-500 focus:ring-red-500 focus:border-red-500' : 'border border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary' ?>"
-              type="datetime-local"
+              type="date"
               name="campaign[end_date]"
-              value="<?= $campaign->end_date ?? '' ?>"
+              value="<?= is_string($campaign->end_date) ? $campaign->end_date : ($campaign->end_date?->format('Y-m-d') ?? '') ?>"
             />
-
+            
             <span class="text-xs font-medium text-red-500 flex items-center gap-1 <?= empty($endDateErrors) ? 'hidden' : '' ?>">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
