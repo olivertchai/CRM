@@ -80,6 +80,7 @@ class CampaignsController extends Controller
 
         $campaign = $this->current_user->campaigns()->findById($id);
         $campaign->title = $params['title'];
+        $campaign->subtitle = $params['subtitle'];
         $campaign->description = $params['description'];
         $campaign->start_date = $params['start_date'];
         $campaign->end_date = $params['end_date'];

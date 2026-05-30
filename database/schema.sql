@@ -16,6 +16,7 @@ CREATE TABLE campaigns (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     title VARCHAR(100) NOT NULL,
+    subtitle VARCHAR(255),
     description TEXT,
     start_date DATE,
     end_date DATE,
