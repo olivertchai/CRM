@@ -90,24 +90,16 @@
         </div>
         </div>
         <!-- Creative Image Section -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-slate-100 dark:border-slate-800">
-        <h3 class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-        <span class="material-symbols-outlined text-primary text-lg">image</span>
-                                    Criativo Principal
-                                </h3>
-        </div>
-        <div class="relative group aspect-[4/5] bg-slate-100 dark:bg-slate-800">
-        <img alt="Black Friday Creative" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXRkg6eqGo7JXVHpwP1lY8bJUsphZ857viKz1v1FBXRE7Rfi5oqyBwtGyjvpYpsTGTLUHAOg2YM3O1Dt8eudfg2p1elIJGCZpnfDafwOo9A550mY_TBQCIWXzvcfJdJTDoNWXIb55NtimSuBBfQDGM9qxFK44sk-YDKt5d3h5LpF3nJxMuFta3w-YELIy0QppbOgPR4FcGhSLNjnDLO0FtOFWn3nPo-n8OwlVwMQrYV3uIbUVOUVfa33H-F9ShEi-wRQNCoNL2rpk"/>
-        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-        <span class="text-white text-xs font-bold uppercase tracking-wider">Banner v1.2</span>
-        </div>
-        </div>
-        <div class="p-3 bg-slate-50 dark:bg-slate-800/50 grid grid-cols-2 gap-2">
-        <div class="text-[9px] font-bold text-slate-400 uppercase">Formato: <span class="text-slate-600 dark:text-slate-300">4:5</span></div>
-        <div class="text-[9px] font-bold text-slate-400 uppercase text-right">Canal: <span class="text-slate-600 dark:text-slate-300">Ads/Whats</span></div>
-        </div>
-        </div>
+            <div class="relative group aspect-[4/5] bg-slate-100 dark:bg-slate-800">
+                <img 
+                    alt="Imagem da Campanha: <?= $campaign->title ?>" 
+                    class="w-full h-full object-cover" 
+                    src="<?= $campaign->image()->path() ?>"
+                />
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span class="text-white text-xs font-bold uppercase tracking-wider">Visualizar Resolução Total</span>
+                </div>
+            </div>
     </aside>
     <!-- Main Content Area: Journey & Channel Performance -->
     <div class="lg:col-span-9 space-y-8">

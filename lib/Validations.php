@@ -12,8 +12,7 @@ class Validations
         $startDateValue = $obj->$startDateField ?? null;
         $endDateValue = $obj->$endDateField ?? null;
 
-        if (empty($startDateValue) || empty($endDateValue))
-        {
+        if (empty($startDateValue) || empty($endDateValue)) {
             $obj->addError($startDateField, "As datas não podem ser nulas ou estarem vazias");
             return false;
         }
@@ -21,8 +20,7 @@ class Validations
         $startDate = \DateTime::createFromFormat('Y-m-d', $startDateValue);
         $endDate = \DateTime::createFromFormat('Y-m-d', $endDateValue);
 
-        if ($startDate > $endDate)
-        {
+        if ($startDate > $endDate) {
             $obj->addError($startDateField, "Data inicial não pode ser maior que a data Final");
             return false;
         }
@@ -97,6 +95,29 @@ class Validations
                 $object->addError($field, 'já existe um registro com esse dado');
             }
             return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Valida o tamanho máximo de um arquivo armazenado na Model
+     */
+    public static function maxFileSize($attribute, $maxBytes, $obj)
+    {
+        $file = $obj->$attribute ?? null;
+
+        // Só valida se um arquivo foi de fato enviado (error 0 = sucesso, error 4 = nenhum arquivo)
+        if (
+            !empty($file['tmp_name']) &&
+            isset($file['error']) &&
+            $file['error'] === UPLOAD_ERR_OK
+        ) {
+            if ($file['size'] > $maxBytes) {
+                $mb = number_format($maxBytes / 1024 / 1024, 0);
+                $obj->addError($attribute, "deve ter no máximo {$mb}MB!");
+                return false;
+            }
         }
 
         return true;

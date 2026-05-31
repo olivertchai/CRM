@@ -2,11 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Models\Campaign;
 use Core\Http\Controllers\Controller;
-use App\Models\User;
 use Core\Http\Request;
-use Lib\Authentication\Auth;
 use Lib\FlashMessage;
 
 class CampaignsController extends Controller
@@ -48,13 +45,17 @@ class CampaignsController extends Controller
     public function create(Request $request): void
     {
         $params = $request->getParams();
+        /** @var \App\Models\Campaign $campaign */
         $campaign = $this->current_user->campaigns()->new($params['campaign']);
+        $campaign->campaign_image = $_FILES['campaign_image'] ?? null;
 
         if ($campaign->save()) {
+            $campaign->image()->update($_FILES['campaign_image'] ?? []);
+
             FlashMessage::success('Campanha registrada com sucesso!');
             $this->redirectTo(route('campaigns.index'));
         } else {
-            FlashMessage::danger('Existem dados incorretos! Por verifique!');
+            FlashMessage::danger('Existem dados incorretos! Por favor, verifique!');
             $title = 'Nova Campanha';
             $this->render('campaign/new', compact('campaign', 'title'));
         }
@@ -78,18 +79,22 @@ class CampaignsController extends Controller
         $id = $request->getParam('id');
         $params = $request->getParam('campaign');
 
+        /** @var \App\Models\Campaign $campaign */
         $campaign = $this->current_user->campaigns()->findById($id);
-        $campaign->title = $params['title'];
-        $campaign->subtitle = $params['subtitle'];
+        $campaign->title       = $params['title'];
+        $campaign->subtitle    = $params['subtitle'];
         $campaign->description = $params['description'];
-        $campaign->start_date = $params['start_date'];
-        $campaign->end_date = $params['end_date'];
+        $campaign->start_date  = $params['start_date'];
+        $campaign->end_date    = $params['end_date'];
+        $campaign->campaign_image = $_FILES['campaign_image'] ?? null;
 
         if ($campaign->save()) {
+        $campaign->image()->update($_FILES['campaign_image'] ?? []);
+
             FlashMessage::success('Campanha atualizada com sucesso!');
             $this->redirectTo(route('campaigns.index'));
         } else {
-            FlashMessage::danger('Existem dados incorretos! Por verifique!');
+            FlashMessage::danger('Existem dados incorretos! Por favor, verifique!');
             $title = "Editar Campanha #{$campaign->id}";
             $this->render('campaign/edit', compact('campaign', 'title'));
         }

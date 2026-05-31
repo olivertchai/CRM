@@ -57,4 +57,62 @@ class CampaignTest extends TestCase
         $this->assertArrayHasKey('start_date', $errors);
         $this->assertArrayHasKey('end_date', $errors);
     }
+
+    public function test_should_not_save_campaign_with_image_too_large(): void
+    {
+        $user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+            'role' => 'manager_marketing',
+            'active' => true
+        ]);
+        $user->save();
+
+        $campaign = new Campaign([
+            'title'       => 'Campanha com imagem grande',
+            'description' => 'Descrição',
+            'start_date'  => '2024-01-01',
+            'end_date'    => '2024-01-31',
+            'user_id'     => $user->id
+        ]);
+
+        // Simula um arquivo de 3MB (maior que o limite de 2MB)
+        $campaign->campaign_image = [
+            'name'     => 'foto.jpg',
+            'tmp_name' => '/tmp/fakefile',
+            'size'     => 3145728,
+            'error'    => UPLOAD_ERR_OK
+        ];
+
+        $this->assertFalse($campaign->save());
+        $this->assertArrayHasKey('campaign_image', $campaign->getErrorsIndex());
+    }
+
+    public function test_should_save_campaign_without_image(): void
+    {
+        $user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+            'role' => 'manager_marketing',
+            'active' => true
+        ]);
+        $user->save();
+
+        $campaign = new Campaign([
+            'title'       => 'Campanha sem imagem',
+            'description' => 'Descrição',
+            'start_date'  => '2024-01-01',
+            'end_date'    => '2024-01-31',
+            'user_id'     => $user->id
+        ]);
+
+        // Nenhum arquivo enviado: campaign_image null não deve gerar erro
+        $campaign->campaign_image = null;
+
+        $this->assertTrue($campaign->save());
+    }
 }

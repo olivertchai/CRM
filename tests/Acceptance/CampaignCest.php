@@ -50,4 +50,55 @@ class CampaignCest
         $I->see('Existem dados incorretos! Por verifique!');
         $I->seeCurrentUrlEquals('/campaigns/new');
     }
+
+    public function tryToUploadImageOnCampaignCreation(AcceptanceTester $I): void
+    {
+        $I->amOnPage('/campaigns/new');
+        $I->fillField('campaign[title]', 'Campanha com Foto');
+        $I->fillField('campaign[description]', 'Descrição da campanha');
+        $I->fillField('campaign[start_date]', '2024-01-01');
+        $I->fillField('campaign[end_date]', '2024-01-31');
+
+        // Anexa um arquivo de imagem real da pasta de fixtures
+        $I->attachFile('campaign_image', 'avatar.png'); // arquivo em tests/Support/Data/
+
+        $I->click('Criar Campanha');
+
+        $I->see('Campanha registrada com sucesso!');
+        $I->seeCurrentUrlEquals('/campaigns');
+    }
+
+    public function tryToSeeImageOnCampaignShow(AcceptanceTester $I): void
+    {
+        $campaigns = \App\Models\Campaign::where(['title' => 'Campanha com Foto']);
+        $campaign = $campaigns[0] ?? null;
+
+        if (!$campaign) {
+            $this->tryToUploadImageOnCampaignCreation($I);
+            $campaigns = \App\Models\Campaign::where(['title' => 'Campanha com Foto']);
+            $campaign = $campaigns[0] ?? null;
+        }
+
+        $I->amOnPage("/campaigns/{$campaign->id}");
+        $I->dontSeeElement('img[src="/assets/images/defaults/campaign-placeholder.png"]');
+        $I->seeElement('img[src*="/assets/uploads/campaigns/"]');
+    }
+
+    public function tryToDeleteCampaignAlsoRemovesImage(AcceptanceTester $I): void
+    {
+        $campaigns = \App\Models\Campaign::where(['title' => 'Campanha com Foto']);
+        $campaign = $campaigns[0] ?? null;
+
+        if (!$campaign) {
+            $this->tryToUploadImageOnCampaignCreation($I);
+            $campaigns = \App\Models\Campaign::where(['title' => 'Campanha com Foto']);
+            $campaign = $campaigns[0] ?? null;
+        }
+
+        $I->amOnPage("/campaigns/{$campaign->id}");
+        $I->click('Excluir');
+
+        $I->see('Campanha removida com sucesso!');
+        $I->seeCurrentUrlEquals('/campaigns');
+    }
 }
