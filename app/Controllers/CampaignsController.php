@@ -49,6 +49,7 @@ class CampaignsController extends Controller
         $campaign = $this->current_user->campaigns()->new($params['campaign']);
         $campaign->campaign_image = $_FILES['campaign_image'] ?? null;
 
+
         if ($campaign->save()) {
             $campaign->image()->update($_FILES['campaign_image'] ?? []);
 
@@ -89,7 +90,7 @@ class CampaignsController extends Controller
         $campaign->campaign_image = $_FILES['campaign_image'] ?? null;
 
         if ($campaign->save()) {
-        $campaign->image()->update($_FILES['campaign_image'] ?? []);
+            $campaign->image()->update($_FILES['campaign_image'] ?? []);
 
             FlashMessage::success('Campanha atualizada com sucesso!');
             $this->redirectTo(route('campaigns.index'));

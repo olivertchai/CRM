@@ -107,15 +107,53 @@ class Validations
     {
         $file = $obj->$attribute ?? null;
 
-        // Só valida se um arquivo foi de fato enviado (error 0 = sucesso, error 4 = nenhum arquivo)
-        if (
-            !empty($file['tmp_name']) &&
-            isset($file['error']) &&
-            $file['error'] === UPLOAD_ERR_OK
-        ) {
+        if (!is_array($file)) {
+            return true;
+        }
+
+        // Arquivo maior que upload_max_filesize do PHP (tmp_name vem vazio)
+        if (isset($file['error']) && $file['error'] === UPLOAD_ERR_INI_SIZE) {
+            $mb = number_format($maxBytes / 1024 / 1024, 0);
+            $obj->addError($attribute, "deve ter no máximo {$mb}MB!");
+            return false;
+        }
+
+        // Nenhum arquivo enviado — campo opcional
+        if (empty($file['tmp_name'])) {
+            return true;
+        }
+
+        // Arquivo enviado com sucesso — valida o tamanho
+        if (isset($file['error']) && $file['error'] === UPLOAD_ERR_OK) {
             if ($file['size'] > $maxBytes) {
                 $mb = number_format($maxBytes / 1024 / 1024, 0);
                 $obj->addError($attribute, "deve ter no máximo {$mb}MB!");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static function fileType($attribute, array $allowedTypes, $obj)
+    {
+        $file = $obj->$attribute ?? null;
+
+        if (!is_array($file)) {
+            return true;
+        }
+
+        // PHP rejeitou antes — outro erro já vai tratar
+        if (empty($file['tmp_name'])) {
+            return true;
+        }
+
+        if (isset($file['error']) && $file['error'] === UPLOAD_ERR_OK) {
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($file['tmp_name']);
+
+            if (!in_array($mimeType, $allowedTypes, true)) {
+                $obj->addError($attribute, 'deve ser uma imagem (JPEG, PNG ou WEBP)!');
                 return false;
             }
         }
