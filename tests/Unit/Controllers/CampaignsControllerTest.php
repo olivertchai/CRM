@@ -73,4 +73,79 @@ class CampaignsControllerTest extends ControllerTestCase
             );
         }
     }
+
+    public function test_create_campaign_with_valid_image_redirects_to_index(): void
+    {
+        $user = new User([
+            'name'                  => 'User 1',
+            'email'                 => 'fulano@example.com',
+            'password'              => '123456',
+            'password_confirmation' => '123456',
+            'role'                  => 'manager_marketing',
+            'active'                => true
+        ]);
+        $user->save();
+        $this->signIn($user);
+
+        // Simula um arquivo dentro do limite (1MB)
+        $_FILES['campaign_image'] = [
+            'name'     => 'foto.jpg',
+            'tmp_name' => '',       // vazio = update() não move nenhum arquivo
+            'size'     => 1048576,
+            'error'    => UPLOAD_ERR_NO_FILE
+        ];
+
+        $response = $this->post(
+            action: 'create',
+            controllerName: CampaignsController::class,
+            params: [
+                'campaign' => [
+                    'title'       => 'Campanha com imagem',
+                    'description' => 'Descrição',
+                    'start_date'  => '2024-01-01',
+                    'end_date'    => '2024-01-31',
+                ]
+            ]
+        );
+
+        $this->assertStringContainsString('Location: ' . route('campaigns.index'), $response);
+    }
+
+    public function test_create_campaign_with_image_too_large_renders_new(): void
+    {
+        $user = new User([
+            'name'                  => 'User 1',
+            'email'                 => 'fulano@example.com',
+            'password'              => '123456',
+            'password_confirmation' => '123456',
+            'role'                  => 'manager_marketing',
+            'active'                => true
+        ]);
+        $user->save();
+        $this->signIn($user);
+
+        // 3MB — ultrapassa o limite
+        $_FILES['campaign_image'] = [
+            'name'     => 'pesada.jpg',
+            'tmp_name' => '/tmp/fakefile',
+            'size'     => 3145728,
+            'error'    => UPLOAD_ERR_OK
+        ];
+
+        $response = $this->post(
+            action: 'create',
+            controllerName: CampaignsController::class,
+            params: [
+                'campaign' => [
+                    'title'       => 'Campanha inválida',
+                    'description' => 'Descrição',
+                    'start_date'  => '2024-01-01',
+                    'end_date'    => '2024-01-31',
+                ]
+            ]
+        );
+
+        // Deve renderizar o form de novo, não redirecionar
+        $this->assertStringNotContainsString('Location:', $response);
+    }
 }
